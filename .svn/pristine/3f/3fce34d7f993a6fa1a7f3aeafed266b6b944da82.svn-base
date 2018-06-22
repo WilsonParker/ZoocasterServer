@@ -1,0 +1,5 @@
+package com.graction.lumi.util.format;
+
+public class DateManager {
+	private static final DateManager instance = new DateManager();
+}

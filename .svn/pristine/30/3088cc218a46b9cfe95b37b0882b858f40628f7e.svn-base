@@ -1,0 +1,25 @@
+package com.graction.lumi.util.format;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateManager {
+	private static final DateManager instance = new DateManager();
+	private SimpleDateFormat simpleDateFormat;
+
+	public static DateManager getInstance() {
+		return instance;
+	}
+
+	public DateManager() {
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd : hh : mm : ss");
+	}
+
+	public String longToDate(String dateTime) {
+		Date date = new Date(Long.parseLong(dateTime + "000"));
+		return simpleDateFormat.format(date.getTime());
+	}
+	public String longToDate(long dateTime) {
+		return longToDate(dateTime+"");
+	}
+}

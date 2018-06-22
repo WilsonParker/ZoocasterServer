@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.graction.lumi.dao.FineDustDAO">
+
+	<!--
+		################################################################# 
+		SELECT
+		################################################################# 
+	-->
+	<select id="select_all_fine_dust" resultType="com.graction.lumi.model.db.FineDustTable">
+		SELECT
+			*
+		FROM
+			FineDust
+	</select>
+	
+	<select id="select_fine_dust_detail" resultType="com.graction.lumi.model.vo.FineDustVO">
+		SELECT
+			*
+			, background.fileInformation_path as background_path
+			, background.fileInformation_name as background_name
+			, charact.fileInformation_path as character_path
+			, charact.fileInformation_name as character_name
+			, effect.fileInformation_path as effect_path
+			, effect.fileInformation_name as effect_name
+		FROM
+			FineDust as fineDust
+			inner join FileInformation as background
+			on fineDust.fineDust_background_ref_file_index = background.fileInformation_index
+			inner join FileInformation as charact 
+			on fineDust.fineDust_character_ref_file_index = charact.fileInformation_index
+			inner join FileInformation as effect
+			on fineDust.fineDust_effect_ref_file_index = effect.fileInformation_index
+		where
+			fineDust_index = #{idx}
+	</select>
+	
+	<!--
+		################################################################# 
+		UPDATE
+		################################################################# 
+	-->
+	
+	<update id="update_fine_dust" parameterType="com.graction.lumi.model.db.FineDustTable">
+		UPDATE
+			FineDust
+		SET
+			<!--  fineDust_min = #{fineDust_min}
+			, fineDust_max = #{fineDust_max} -->
+			fineDust_activation = #{fineDust_activation}
+			, fineDust_background_ref_file_index = #{fineDust_background_ref_file_index}
+			, fineDust_character_ref_file_index = #{fineDust_character_ref_file_index}
+			, fineDust_effect_ref_file_index = #{fineDust_effect_ref_file_index}
+		WHERE
+			fineDust_index = #{fineDust_index}
+		;
+	</update>
+</mapper>

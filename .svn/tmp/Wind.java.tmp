@@ -1,0 +1,47 @@
+package com.graction.lumi.model.weather;
+
+public class Wind {
+<<<<<<< .mine
+	private double speed	// Wind speed, Unit Default: meter/sec, Metricr: meer/sec, Imperial: miles/hour
+					, deg;	// Wind direction, degrees (meteorological)	
+=======
+	private double speed, deg;	// Wind speed, Unit Default: meter/sec, Metricr: meer/sec, Imperial: miles/hour
+								// Wind direction, degrees (meteorological)
+
+	@Override
+	public String toString() {
+		return "Wind [speed=" + speed + ", deg=" + deg + "]";
+	}
+
+>>>>>>> .r40
+
+	public double getSpeed() {
+		return speed;
+	}
+
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+<<<<<<< .mine
+	public double getDeg() {
+=======
+
+	public double getDeg() {
+>>>>>>> .r40
+		return deg;
+	}
+
+<<<<<<< .mine
+	public void setDeg(double deg) {
+		this.deg = deg;
+	}
+=======
+>>>>>>> .r40
+
+	public void setDeg(double deg) {
+		this.deg = deg;
+	}
+
+}

@@ -1,0 +1,196 @@
+package com.graction.lumi.data;
+
+import java.util.List;
+
+import com.graction.lumi.data.DataStorage.Key;
+import com.graction.lumi.model.ImageModel;
+import com.graction.lumi.model.request.LatLonRequestModel;
+import com.graction.lumi.model.response.FineDustModel;
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.model.vo.FineDustVO;
+import com.graction.lumi.model.vo.RegionReservationVO;
+import com.graction.lumi.model.vo.WeatherVO;
+import com.graction.lumi.net.Net;
+import com.graction.lumi.util.DataProvideManager;
+import com.graction.lumi.util.DataProvideManager.Complete;
+import com.graction.lumi.util.DataProvideManager.Execution;
+import com.graction.lumi.util.StringUtil;
+import com.graction.lumi.util.format.TemperatureManager;
+import com.graction.lumi.util.func.DiscriminateManager;
+import com.graction.lumi.util.func.DiscriminateManager.DiscrimInterface;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class WeatherDataProvider {
+	private static final WeatherDataProvider instance = new WeatherDataProvider();
+	private static final HLogger logger = new HLogger(WeatherDataProvider.class);
+
+	private DataTableManager dataTableManager = DataTableManager.getInstance();
+	private FineDustModel fineDustModel;
+	private DataProvideManager dataProvideManager;
+//	private boolean isPriorityDetermined;
+	
+	public static WeatherDataProvider getInstance() {
+		return instance;
+	}
+
+	// Compare reservation and dust priority
+	public WeatherModel setWeatherdata(final WeatherModel weatherModel) {
+		getfineDustData(weatherModel.getCoord().getLon(),weatherModel.getCoord().getLat());
+		DiscriminateManager<WeatherModel> discriminateManager = new DiscriminateManager<WeatherModel>();
+		discriminateManager.addDiscrimin(new DiscrimInterface() {
+			
+			@Override
+			public WeatherModel discriminate() {
+				List<RegionReservationVO> tableList = dataTableManager.getDBRegionReservationList();
+				for (RegionReservationVO vo : tableList) {
+					// AddressManager.getInstance().extractAddress(table.getRegionReservation_region());
+					System.out.printf("address : %s\n%s\n",weatherModel.getAddressModel().getAddress(), vo.getRegionReservation_region());
+					System.out.printf("address contains : %s\n",StringUtil.contains(weatherModel.getAddressModel().getAddress(), vo.getRegionReservation_region(), ","));
+					if (StringUtil.contains(weatherModel.getAddressModel().getAddress(), vo.getRegionReservation_region(), ",")) {
+						System.out.println("address contains");
+						System.out.println(vo.getRegionReservation_prioritization()+" : "+vo.getRegionReservation_prioritization().equals(Key.KEY_FINE_DUST));
+						if(vo.getRegionReservation_prioritization().equals(Key.KEY_FINE_DUST)) {
+							WeatherModel tmp =  getFineDust(weatherModel);
+							if(tmp!=null)
+								return tmp;
+						}
+						logger.log(LogType.INFO, "reservation - weatherModel : " + weatherModel);
+						return bindWeatherModelData(weatherModel, vo);
+					}
+				}
+				return null;
+			}
+		});
+		
+		discriminateManager.addDiscrimin(new DiscrimInterface() {
+			
+			@Override
+			public WeatherModel discriminate() {
+				return getFineDust(weatherModel);
+			}
+		});
+		
+		discriminateManager.addDiscrimin(new DiscrimInterface() {
+			
+			@Override
+			public WeatherModel discriminate() {
+				return getWeatherData(weatherModel);
+			}
+		});
+		
+		return discriminateManager.getResult();
+	}
+	
+/*	public WeatherModel setWeatherdata(WeatherModel weatherModel) {
+		WeatherModel tmp;
+		List<RegionReservationVO> tableList = dataTableManager.getDBRegionReservationList();
+		getfineDustData(weatherModel.getCoord().getLon(),weatherModel.getCoord().getLat());
+		for (RegionReservationVO table : tableList) {
+			// AddressManager.getInstance().extractAddress(table.getRegionReservation_region());
+			System.out.printf("address : %s\n%s\n",weatherModel.getAddress(), table.getRegionReservation_region());
+			System.out.printf("address contains : %s\n",weatherModel.getAddress().contains(table.getRegionReservation_region()));
+			if (weatherModel.getAddress().contains(table.getRegionReservation_region())) {
+				System.out.println("address contains");
+				if(table.getRegionReservation_prioritization().equals(Key.KEY_FINE_DUST)) {
+					tmp = getFineDust(weatherModel);
+					if(tmp != null)
+						return tmp;
+				}
+				weatherModel.setBackground_img_url(table.getbackground_img_path() + table.getbackground_img_name());
+				weatherModel.setCharacter_img_url(table.getCharacter_path() + table.getCharacter_name());
+				weatherModel.setEffect_img_url(table.getEffect_path() + table.getEffect_name());
+				logger.log(LogType.INFO, "reservation - weatherModel : " + weatherModel);
+				return weatherModel;
+			}
+		}
+		tmp = getFineDust(weatherModel);
+		weatherModel = tmp == null? getWeatherData(weatherModel) : tmp; 
+		
+		return weatherModel;
+	}
+*/	
+	private void getfineDustData(double lon, double lat) {
+		dataProvideManager = new DataProvideManager(new Execution() {
+			
+			@Override
+			public void excution() {
+				Net.getInstance().getSKPlanetFactoryIm().selectFineDust(new LatLonRequestModel(lat+"", lon+"", LatLonRequestModel.KEY_SK_PLANET).getMap()).enqueue(new Callback<FineDustModel>() {
+					
+					@Override
+					public void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response) {
+						if (response.isSuccessful()) {
+							fineDustModel = response.body();
+							logger.log(HLogger.LogType.INFO, "void priorityfineDust(double lon, double lat) - void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response)", "fine dust select successful");
+						} else {
+							logger.log(HLogger.LogType.WARN, "void priorityfineDust(double lon, double lat) - void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response)", "fine dust select not successful");
+						}
+						dataProvideManager.complete();
+					}
+					
+					@Override
+					public void onFailure(Call<FineDustModel> arg0, Throwable t) {
+						logger.log(HLogger.LogType.ERROR, "void priorityfineDust(double lon, double lat) - void onFailure(Call<FineDustModel> arg0, Throwable t)", t);	
+					}
+				});
+				
+			}
+		}, new Complete() {
+			
+			@Override
+			public void complete() {
+				
+			}
+		});
+		try {
+			dataProvideManager.execution();
+		} catch (InterruptedException e) {
+			logger.log(HLogger.LogType.ERROR, "void priorityfineDust(double lon, double lat)", "Thread sleep Exception", e);
+		}
+	}
+	
+	private WeatherModel getFineDust(WeatherModel weatherModel) {
+		for(FineDustVO vo : dataTableManager.getDBFineDustList()) {
+			logger.log(LogType.INFO, "fineDustModel : "+fineDustModel);
+			double value  = -1;
+			if(fineDustModel.getWeather().getDust().length > 0) {
+				value = Double.parseDouble(fineDustModel.getWeather().getDust()[0].getPm10().getValue());
+				weatherModel.getFineDustModel().setValue(value);
+				weatherModel.getFineDustModel().setGrade(fineDustModel.getWeather().getDust()[0].getPm10().getGrade());
+			}
+			if(vo.getFineDust_min() <= value && value <= vo.getFineDust_max()) {
+				logger.log(LogType.INFO, "fineDust - weatherModel : " + weatherModel);
+				return bindWeatherModelData(weatherModel, vo);
+			}
+		}
+		return null;
+	}
+	
+	private WeatherModel getWeatherData(WeatherModel weatherModel) {
+		for (WeatherVO vo : DataTableManager.getInstance().getDBWeatherVOList()) {
+			if(vo.getWeather_code() == weatherModel.getWeather().get(0).getId()) {
+				logger.log(LogType.INFO, "WeatherData - weatherModel : " + weatherModel);
+				return bindWeatherModelData(weatherModel, vo);
+			}
+		}
+		return null;
+	}
+	
+	private WeatherModel bindWeatherModelData(WeatherModel weatherModel, ImageModel imageFrame) {
+		weatherModel.getImageModel().setBackground_img_name(imageFrame.getBackground_img_name());
+		weatherModel.getImageModel().setBackground_img_path(imageFrame.getBackground_img_path());
+		weatherModel.getImageModel().setCharacter_img_name(imageFrame.getCharacter_img_name());
+		weatherModel.getImageModel().setCharacter_img_path(imageFrame.getCharacter_img_path());
+		weatherModel.getImageModel().setEffect_img_name(imageFrame.getEffect_img_name());
+		weatherModel.getImageModel().setEffect_img_path(imageFrame.getEffect_img_path());
+		TemperatureManager tempManager = TemperatureManager.getInstance();
+		weatherModel.getMain().setTemp(tempManager.kelvinToCelsius(weatherModel.getMain().getTemp()));
+		weatherModel.getMain().setTemp_max(tempManager.kelvinToCelsius(weatherModel.getMain().getTemp_max()));
+		weatherModel.getMain().setTemp_min(tempManager.kelvinToCelsius(weatherModel.getMain().getTemp_min()));
+		return weatherModel;
+	}
+}

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weatherData>
+		<!-- Group 2xx: Thunderstorm -->
+		<weather>
+			<id> 200</id>
+			<message>thunderstorm with light rain</message>
+		</weather>
+		<weather>
+			<id> 201</id>
+			<message>thunderstorm with rain</message>
+		</weather>
+		<!-- <weather>
+			<id> 202</id>
+			<message>thunderstorm with heavy rain</message>
+		</weather>
+		<weather>
+			<id> 210</id>
+			<message>light thunderstorm</message>
+		</weather>
+		<weather>
+			<id> 211</id>
+			<message>thunderstorm</message>
+		</weather>
+		<weather>
+			<id> 212</id>
+			<message>heavy thunderstorm</message>
+		</weather>
+		<weather>
+			<id> 221</id>
+			<message>ragged thunderstorm</message>
+		</weather>
+		<weather>
+			<id> 230</id>
+			<message>thunderstorm with light drizzle</message>
+		</weather>
+		<weather>
+			<id> 231</id>
+			<message>thunderstorm with drizzle</message>
+		</weather>
+		<weather>
+			<id> 232</id>
+			<message>thunderstorm with heavy drizzle</message>
+		</weather>
+
+		Group 3xx: Drizzle
+		<weather>
+			<id>300</id>
+			<message>light intensity drizzle</message>
+		</weather>
+		<weather>
+			<id>301</id>
+			<message>drizzle</message>
+		</weather>
+		<weather>
+			<id>302</id>
+			<message>heavy intensity drizzle</message>
+		</weather>
+		<weather>
+			<id>310</id>
+			<message>light intensity drizzle rain</message>
+		</weather>
+		<weather>
+			<id>311</id>
+			<message>drizzle rain</message>
+		</weather>
+		<weather>
+			<id>312</id>
+			<message>heavy intensity drizzle rain</message>
+		</weather>
+		<weather>
+			<id>313</id>
+			<message>shower rain and drizzle</message>
+		</weather>
+		<weather>
+			<id>314</id>
+			<message>heavy shower rain and drizzle</message>
+		</weather>
+		<weather>
+			<id>321</id>
+			<message>shower drizzle</message>
+		</weather>
+
+		Group 5xx: Rain
+		<weather>
+			<id>500</id>
+			<message>light rain</message>
+		</weather>
+		<weather>
+			<id>501</id>
+			<message>moderate rain</message>
+		</weather>
+		<weather>
+			<id>502</id>
+			<message>heavy intensity rain</message>
+		</weather>
+		<weather>
+			<id>503</id>
+			<message>very heavy rain</message>
+		</weather>
+		<weather>
+			<id>504</id>
+			<message>extreme rain</message>
+		</weather>
+		<weather>
+			<id>511</id>
+			<message>freezing rain</message>
+		</weather>
+		<weather>
+			<id>520</id>
+			<message>light intensity shower rain</message>
+		</weather>
+		<weather>
+			<id>521</id>
+			<message>shower rain</message>
+		</weather>
+		<weather>
+			<id>522</id>
+			<message>heavy intensity shower rain</message>
+		</weather>
+		<weather>
+			<id>531</id>
+			<message>ragged shower rain</message>
+		</weather>
+
+		Group 6xx: Snow
+		<weather>
+			<id>600</id>
+			<message>light snow</message>
+		</weather>
+		<weather>
+			<id>601</id>
+			<message>snow</message>
+		</weather>
+		<weather>
+			<id>602</id>
+			<message>heavy snow</message>
+		</weather>
+		<weather>
+			<id>611</id>
+			<message>sleet</message>
+		</weather>
+		<weather>
+			<id>612</id>
+			<message>shower sleet</message>
+		</weather>
+		<weather>
+			<id>615</id>
+			<message>light rain and snow</message>
+		</weather>
+		<weather>
+			<id>616</id>
+			<message>rain and snow</message>
+		</weather>
+		<weather>
+			<id>620</id>
+			<message>light shower snow</message>
+		</weather>
+		<weather>
+			<id>621</id>
+			<message>shower snow</message>
+		</weather>
+		<weather>
+			<id>622</id>
+			<message>heavy shower snow</message>
+		</weather>
+
+		Group 7xx: Atmosphere
+		<weather>
+			<id>701</id>
+			<message>mist</message>
+		</weather>
+		<weather>
+			<id>711</id>
+			<message>smoke</message>
+		</weather>
+		<weather>
+			<id>721</id>
+			<message>haze</message>
+		</weather>
+		<weather>
+			<id>731</id>
+			<message>sand, dust whirls</message>
+		</weather>
+		<weather>
+			<id>741</id>
+			<message>fog</message>
+		</weather>
+		<weather>
+			<id>751</id>
+			<message>sand</message>
+		</weather>
+		<weather>
+			<id>761</id>
+			<message>dust</message>
+		</weather>
+		<weather>
+			<id>762</id>
+			<message>volcanic ash</message>
+		</weather>
+		<weather>
+			<id>771</id>
+			<message>squalls</message>
+		</weather>
+		<weather>
+			<id>781</id>
+			<message>tornado</message>
+		</weather>
+
+		Group 800: Clear
+		<weather>
+			<id>800</id>
+			<message>clear sky</message>
+		</weather>
+
+		Group 80x: Clouds
+		<weather>
+			<id>801</id>
+			<message>few clouds</message>
+		</weather>
+		<weather>
+			<id>802</id>
+			<message>scattered clouds</message>
+		</weather>
+		<weather>
+			<id>803</id>
+			<message>broken clouds</message>
+		</weather>
+		<weather>
+			<id>804</id>
+			<message>overcast clouds</message>
+		</weather>
+		Group 90x: Extreme
+
+		<weather>
+			<id>900</id>
+			<message>tornado</message>
+		</weather>
+		<weather>
+			<id>901</id>
+			<message>tropical storm</message>
+		</weather>
+		<weather>
+			<id>902</id>
+			<message>hurricane</message>
+		</weather>
+		<weather>
+			<id>903</id>
+			<message>cold</message>
+		</weather>
+		<weather>
+			<id>904</id>
+			<message>hot</message>
+		</weather>
+		<weather>
+			<id>905</id>
+			<message>windy</message>
+		</weather>
+		<weather>
+			<id>906</id>
+			<message>hail</message>
+		</weather>
+
+		Group 9xx: Additional
+		<weather>
+			<id>951</id>
+			<message>calm</message>
+		</weather>
+		<weather>
+			<id>952</id>
+			<message>light breeze</message>
+		</weather>
+		<weather>
+			<id>953</id>
+			<message>gentle breeze</message>
+		</weather>
+		<weather>
+			<id>954</id>
+			<message>moderate breeze</message>
+		</weather>
+		<weather>
+			<id>955</id>
+			<message>fresh breeze</message>
+		</weather>
+		<weather>
+			<id>956</id>
+			<message>strong breeze</message>
+		</weather>
+		<weather>
+			<id>957</id>
+			<message>high wind, near gale</message>
+		</weather>
+		<weather>
+			<id>958</id>
+			<message>gale</message>
+		</weather>
+		<weather>
+			<id>959</id>
+			<message>severe gale</message>
+		</weather>
+		<weather>
+			<id>960</id>
+			<message>storm</message>
+		</weather>
+		<weather>
+			<id>961</id>
+			<message>violent storm</message>
+		</weather>
+		<weather>
+			<id>962</id>
+			<message>hurricane</message>
+		</weather> -->
+</weatherData>

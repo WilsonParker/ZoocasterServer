@@ -1,0 +1,16 @@
+package com.graction.lumi.util.format;
+
+public class NumberFormatManager {
+	private static final NumberFormatManager instatnce = new NumberFormatManager();
+
+	public static NumberFormatManager getInstatnce() {
+		return instatnce;
+	}
+	
+	public double round(double d, int r) {
+		double pow = Math.pow(10 ,r);
+		return Math.round((d * pow)) / pow;
+	}
+	
+
+}

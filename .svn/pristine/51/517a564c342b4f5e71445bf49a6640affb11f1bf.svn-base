@@ -1,0 +1,117 @@
+package com.graction.lumi.model.vo;
+
+import com.graction.lumi.model.ImageFrame;
+
+public class WeatherVO implements ImageFrame{
+	private int weather_code
+				, background_index
+				, charcater_index
+				, effect_index
+				;
+	private String weather_name
+					, background_root
+					, background_img_path
+					, background_img_name
+					, character_root
+					, character_img_path
+					, character_img_name
+					, effect_root
+					, effect_img_path
+					, effect_img_name
+					;
+	public int getWeather_code() {
+		return weather_code;
+	}
+	public void setWeather_code(int weather_code) {
+		this.weather_code = weather_code;
+	}
+	public int getBackground_index() {
+		return background_index;
+	}
+	public void setBackground_index(int background_index) {
+		this.background_index = background_index;
+	}
+	public int getCharcater_index() {
+		return charcater_index;
+	}
+	public void setCharcater_index(int charcater_index) {
+		this.charcater_index = charcater_index;
+	}
+	public int getEffect_index() {
+		return effect_index;
+	}
+	public void setEffect_index(int effect_index) {
+		this.effect_index = effect_index;
+	}
+	public String getWeather_name() {
+		return weather_name;
+	}
+	public void setWeather_name(String weather_name) {
+		this.weather_name = weather_name;
+	}
+	public String getBackground_root() {
+		return background_root;
+	}
+	public void setBackground_root(String background_root) {
+		this.background_root = background_root;
+	}
+	public String getBackground_img_path() {
+		return background_img_path;
+	}
+	public void setBackground_img_path(String background_img_path) {
+		this.background_img_path = background_img_path;
+	}
+	public String getBackground_img_name() {
+		return background_img_name;
+	}
+	public void setBackground_img_name(String background_img_name) {
+		this.background_img_name = background_img_name;
+	}
+	public String getCharacter_root() {
+		return character_root;
+	}
+	public void setCharacter_root(String character_root) {
+		this.character_root = character_root;
+	}
+	public String getCharacter_img_path() {
+		return character_img_path;
+	}
+	public void setCharacter_img_path(String character_img_path) {
+		this.character_img_path = character_img_path;
+	}
+	public String getCharacter_img_name() {
+		return character_img_name;
+	}
+	public void setCharacter_img_name(String character_img_name) {
+		this.character_img_name = character_img_name;
+	}
+	public String getEffect_root() {
+		return effect_root;
+	}
+	public void setEffect_root(String effect_root) {
+		this.effect_root = effect_root;
+	}
+	public String getEffect_img_path() {
+		return effect_img_path;
+	}
+	public void setEffect_img_path(String effect_img_path) {
+		this.effect_img_path = effect_img_path;
+	}
+	public String getEffect_img_name() {
+		return effect_img_name;
+	}
+	public void setEffect_img_name(String effect_img_name) {
+		this.effect_img_name = effect_img_name;
+	}
+	@Override
+	public String toString() {
+		return "WeatherVO [weather_code=" + weather_code + ", background_index=" + background_index
+				+ ", charcater_index=" + charcater_index + ", effect_index=" + effect_index + ", weather_name="
+				+ weather_name + ", background_root=" + background_root + ", background_img_path=" + background_img_path
+				+ ", background_img_name=" + background_img_name + ", character_root=" + character_root
+				+ ", character_img_path=" + character_img_path + ", character_img_name=" + character_img_name
+				+ ", effect_root=" + effect_root + ", effect_img_path=" + effect_img_path + ", effect_img_name="
+				+ effect_img_name + "]";
+	}
+	
+}

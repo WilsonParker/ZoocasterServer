@@ -1,0 +1,43 @@
+package com.graction.lumi.util.gps;
+
+import java.io.IOException;
+
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.GeocoderRequestBuilder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderResult;
+import com.google.code.geocoder.model.LatLng;
+import com.graction.lumi.util.log.HLogger;
+
+/**
+ * Created by Hare on 2017-07-20. Updated by Hare on 2017-09-27.
+ */
+public class GoogleLocationManager {
+	private HLogger logger;
+	private static String LANGUAGE = "ko";
+
+	public GoogleLocationManager() {
+		logger = HLogger.getInstance(getClass());
+	}
+
+	public String getAddress(final String lat, final String lon) {
+		Geocoder geocoder = new Geocoder();
+		LatLng latlng = new LatLng(lat, lon);
+		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setLocation(latlng).setLanguage(LANGUAGE)
+				.getGeocoderRequest();
+		GeocodeResponse geocoderResponse;
+		GeocoderResult geocoderResult = null;
+		try {
+			geocoderResponse = geocoder.geocode(geocoderRequest);
+			geocoder.geocode(geocoderRequest);
+			geocoderResult = geocoderResponse.getResults().iterator().next();
+			logger.log(HLogger.LogType.INFO, "getAddress(final String lat, final String lon)",
+					geocoderResult.getFormattedAddress());
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.log(HLogger.LogType.ERROR, "getAddress(final String lat, final String lon)", e);
+		}
+		return geocoderResult.getFormattedAddress();
+	}
+}

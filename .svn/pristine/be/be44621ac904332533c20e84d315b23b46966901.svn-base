@@ -1,0 +1,28 @@
+var nowLocation;
+
+function log(msg) {
+	console.log(msg);
+};
+
+function movePage(page) {
+	nowLocation = page;
+	$.ajax({
+		url : page,
+		success : function(result){
+			$("#content").html(result);
+		}
+	})
+};
+
+function reload(){
+	movePage(nowLocation);
+};
+
+
+
+
+
+
+/*
+ * ############################################################################################################################################
+ */

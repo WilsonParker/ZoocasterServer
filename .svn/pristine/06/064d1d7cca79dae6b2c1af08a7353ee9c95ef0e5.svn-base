@@ -1,0 +1,62 @@
+<%@ page import="com.graction.lumi.util.format.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.graction.lumi.data.*"%>
+<%@ page import="com.graction.lumi.model.response.*"%>
+<%@ page import="com.graction.lumi.model.db.FineDustTable"%>
+<%
+	ArrayList<FineDustTable> list = (ArrayList<FineDustTable>) request.getAttribute(DataStorage.Attribute.ATTR_FINE_DUST_TABLE_LIST);
+%>
+
+<h1>Fine Dust List</h1>
+<hr>
+
+<div class="card mb-3">
+	<div class="card-header">
+		<i class="fa fa-table"></i> Weather List
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table table-bordered dataTable table-hover" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+				<thead>
+					<tr role="row">
+ 						<th class="sorting_desc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="descending"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_GRADE%></th>
+                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MIN%></th>
+                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MAX%></th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th rowspan="1" colspan="1"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_GRADE%></th>
+						<th rowspan="1" colspan="1"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MIN%></th>
+						<th rowspan="1" colspan="1"><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MAX%></th>
+					</tr>
+				</tfoot>
+				<tbody>
+					<%
+						for (FineDustTable table : list) {
+					%>
+					<tr role="row" onclick="javascript: location.href='<%=request.getContextPath() + DataStorage.Mapping.MAPPING_MANAGE_FINE_DUST_DETAIL+"?"+DataStorage.Param.PARAM_INDEX+"="+table.getFineDust_index()%>';">
+						<td><%=table.getFineDust_grade()%></td>
+						<td><%=table.getFineDust_min()%></td>
+						<td><%=table.getFineDust_max()%></td>
+					</tr>
+					<%
+						}
+					%>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="card-footer small text-muted">Updated 2017-12-06 at 11:46 PM</div>
+</div>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>jquery-3.2.1.min.js"></script>
+<script>
+	$(function() {
+		// Table Sort ( column index, asc, desc);
+		tableOrder(1, 0);
+		$("tbody:odd").addClass("odd");
+		$("tbody:even").addClass("even");
+	})
+</script>

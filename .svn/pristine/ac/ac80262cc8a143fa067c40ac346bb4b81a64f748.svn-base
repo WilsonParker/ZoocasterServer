@@ -1,0 +1,21 @@
+package com.graction.lumi.util.log;
+
+import java.util.Collection;
+
+public class StringManager {
+	private static final StringManager instance = new StringManager();
+
+	public static StringManager getInstance() {
+		return instance;
+	}
+	
+	// List to String 
+	public <E> String createString(String root, String child, Collection<E> items) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{"+root+" : { "+child+" [");
+		for(E e : items)
+			sb.append(e.toString()+",");
+		sb.append("]}}");
+		return sb.toString();
+	}
+}

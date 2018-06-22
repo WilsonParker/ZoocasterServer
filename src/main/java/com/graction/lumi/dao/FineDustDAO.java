@@ -1,0 +1,22 @@
+package com.graction.lumi.dao;
+
+import java.util.ArrayList;
+
+import com.graction.lumi.model.db.FineDustTable;
+import com.graction.lumi.model.vo.FineDustVO;
+
+public interface FineDustDAO {
+	
+	/*
+	 *	SELECT 
+	 */
+	public ArrayList<FineDustTable> select_all_fine_dust();
+	public FineDustVO select_fine_dust_detail(int idx);
+	public ArrayList<FineDustVO> select_fine_dust_activation();
+	
+	/*
+	 *	UPDATE
+	 */
+	public boolean update_fine_dust(FineDustTable table);
+	
+}

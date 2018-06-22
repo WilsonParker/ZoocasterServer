@@ -1,0 +1,96 @@
+package com.graction.lumi.model.request;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LatLonRequestModel {
+	private static final String KEY_LAT = "lat"
+								, KEY_LON = "lon"
+								, OPEN_WEATHER_APIID = "5a165ea40110d89c6a33e762fb7501c6"
+								, SK_PLANET_APPKEY = "a8c10122-bba0-35b7-a61c-d29002a2fee3"
+								, OPEN_DATA_APPKEY = "B0HQD8ZLlW2LNyCNkg3pjKg5IyY%2F2oJ%2Fm3b92Q%2FUuqW75TlkLEVOJxNzRHUEKtH%2F4i%2BSl9DFQRbCpQstzRdNjg%3D%3D"
+								;	
+	public static final String	KEY_OPEN_WEATHER = "appid"
+								, KEY_SK_PLANET = "appKey"
+								, KEY_OPEN_DATA = "serviceKey"
+								;
+	private Map<String ,String> map;
+
+	public LatLonRequestModel(String lat, String lon) {
+		map = new HashMap<String, String>();
+		map.put(KEY_LAT, lat);
+		map.put(KEY_LON, lon);
+		inputKey(KEY_OPEN_WEATHER);
+	}
+	
+	public LatLonRequestModel(String lat, String lon, String key) {
+		map = new HashMap<String, String>();
+		map.put(KEY_LAT, lat);
+		map.put(KEY_LON, lon);
+		inputKey(key);
+	}
+	
+	// Open Data API
+	public LatLonRequestModel(String station) {
+		map = new HashMap<String, String>();
+		/*map.put(KEY_OPEN_DATA, OPEN_DATA_APPKEY);
+		map.put("stationName", station);
+		map.put("numOfRows", "10");
+		map.put("dataTerm", "DAILY");
+		map.put("_returnType", "json");
+		map.put("pageNo", "1");
+		map.put("startPage", "1");
+		map.put("ver", "1.3");
+		// inputKey(KEY_OPEN_DATA);
+		 */
+		// map.put("serviceKey", "B0HQD8ZLlW2LNyCNkg3pjKg5IyY%2F2oJ%2Fm3b92Q%2FUuqW75TlkLEVOJxNzRHUEKtH%2F4i%2BSl9DFQRbCpQstzRdNjg%3D%3D");
+		
+		// B0HQD8ZLlW2LNyCNkg3pjKg5IyY%252F2oJ%252Fm3b92Q%252FUuqW75TlkLEVOJxNzRHUEKtH%252F4i%252BSl9DFQRbCpQstzRdNjg%253D%253D
+		// B0HQD8ZLlW2LNyCNkg3pjKg5IyY%2F2oJ%2Fm3b92Q%2FUuqW75TlkLEVOJxNzRHUEKtH%2F4i%2BSl9DFQRbCpQstzRdNjg%3D%3D
+		// B0HQD8ZLlW2LNyCNkg3pjKg5IyY%252F2oJ%252Fm3b92Q%252FUuqW75TlkLEVOJxNzRHUEKtH%252F4i%252BSl9DFQRbCpQstzRdNjg%253D%253D
+		try {
+			map.put("serviceKey", URLDecoder.decode(OPEN_DATA_APPKEY, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		map.put("stationName", "종로구");
+		map.put("numOfRows", "10");
+		map.put("dataTerm", "DAILY");
+		map.put("_returnType", "json");
+		map.put("pageNo", "1");
+		map.put("startPage", "1");
+		map.put("ver", "1.3");
+		}
+
+	private void inputKey(String key) {
+		switch (key) {
+		case KEY_SK_PLANET:
+			map.put(KEY_SK_PLANET, SK_PLANET_APPKEY);
+			map.put("version", "1");
+			break;
+		case KEY_OPEN_DATA:
+			map.put(KEY_OPEN_DATA, OPEN_DATA_APPKEY);
+			break;
+		case KEY_OPEN_WEATHER:
+		default : 
+			map.put(KEY_OPEN_WEATHER, OPEN_WEATHER_APIID);
+			break;
+		}
+	}
+	
+	public void setLat(String lat) {
+		map.put(KEY_LAT, lat);
+	}
+	
+	public void setLon(String lon) {
+		map.put(KEY_LON, lon);
+	}
+	
+	public Map<String, String> getMap() {
+		return map;
+	}
+
+}

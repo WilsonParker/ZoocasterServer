@@ -1,0 +1,5 @@
+package com.graction.lumi.dao;
+
+public interface WeatherDAO {
+	
+}

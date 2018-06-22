@@ -1,0 +1,119 @@
+package com.graction.lumi.util.parser;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.graction.lumi.util.StringUtil;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+public class DataParser {
+	private static final DataParser instance = new DataParser();
+	private static final HLogger logger = new HLogger(DataParser.class);
+
+	public static DataParser getInstance() {
+		return instance;
+	}
+	
+	public Map<String, Object> objToMap(Object obj) {
+		Map<String, Object> map = new HashMap<>();
+		Map<String, Method> methods = new HashMap<>();
+		Arrays.asList(obj.getClass().getDeclaredMethods()).parallelStream().filter(new Predicate<Method>() {
+
+			@Override
+			public boolean test(Method t) {
+				return t.getName().toUpperCase().contains("GET");
+			}
+
+		}).forEach(new Consumer<Method>() {
+
+			@Override
+			public void accept(Method t) {
+				methods.put(t.getName().toUpperCase().replaceAll("GET", ""), t);
+			}
+		});
+
+		Arrays.asList(obj.getClass().getDeclaredFields()).forEach(new Consumer<Field>() {
+
+			@Override
+			public void accept(Field t) {
+				try {
+					Method m = methods.get(t.getName().toUpperCase());
+					if (m != null)
+						map.put(t.getName(), m.invoke(obj, null));
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					logger.log(LogType.ERROR, "Map<String, Object> objToMap(Object obj)", e);
+				}
+			}
+
+		});
+		return map;
+	}
+	
+	public <T> T dataBinding(HttpServletRequest request, Object obj) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+		return dataBinding(request, obj.getClass());
+	}
+	
+	public <T> T dataBinding(HttpServletRequest request, Class<?> cls) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+		T t = (T) cls.newInstance();
+		Enumeration<String> reqNames = request.getParameterNames();
+		ArrayList<Method> methods = new ArrayList<Method>();
+		for(Method method : t.getClass().getDeclaredMethods()) {
+			if(method.getName().toUpperCase().contains("SET"))
+				methods.add(method);
+		}
+		while(reqNames.hasMoreElements()) {
+			String name = reqNames.nextElement();
+			for(Method method : methods) {
+				if(method.getName().toUpperCase().contains(name.toUpperCase())) {
+					method.invoke(t, convertData(request.getParameter(name), method.getParameters()[0]));
+					methods.remove(method);
+					break;
+				}
+			}
+		}
+		return t;
+	}
+	
+	public Object convertData(String data, Class<?> type) {
+		return convertData(data, type.getName());
+	}
+	
+	public Object convertData(String data, Parameter param) {
+		return convertData(data, param.getType().getName());
+	}
+	
+	public Object convertData(String data, String type) {
+		Object obj = null;
+		switch(type.toUpperCase()) {
+		case "INT":
+			obj = Integer.parseInt(data);
+			break;
+		case "LONG":
+			obj = Long.parseLong(data);
+			break;
+		case "DOUBLE":
+			obj = Double.parseDouble(data);
+			break;
+		case "JAVA.LANG.STRING":
+			obj = StringUtil.requestParamEncoding(data);
+			break;
+		case "JAVA.LANG.OBJECT":
+		default:
+			obj = data;
+			break;
+		}
+		return obj;
+	}
+}

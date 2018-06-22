@@ -1,0 +1,106 @@
+package test;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+import com.graction.lumi.model.request.LatLonRequestModel;
+import com.graction.lumi.model.response.IntegratedAirQualityModel;
+import com.graction.lumi.net.CustomIntercepter;
+import com.graction.lumi.net.OpenDataFactoryIm;
+import com.graction.lumi.util.StringUtil;
+import com.graction.lumi.util.parser.LenientGsonConverterFactory;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+public class TestMap {
+
+	@Test
+	public void test() {
+		// fail("Not yet implemented");
+		test2();
+		// B0HQD8ZLlW2LNyCNkg3pjKg5IyY%252F2oJ%252Fm3b92Q%252FUuqW75TlkLEVOJxNzRHUEKtH%252F4i%252BSl9DFQRbCpQstzRdNjg%253D%253D
+		
+		String falseUrl = "B0HQD8ZLlW2LNyCNkg3pjKg5IyY%252F2oJ%252Fm3b92Q%252FUuqW75TlkLEVOJxNzRHUEKtH%252F4i%252BSl9DFQRbCpQstzRdNjg%253D%253D"
+				, trueUrl = "B0HQD8ZLlW2LNyCNkg3pjKg5IyY%2F2oJ%2Fm3b92Q%2FUuqW75TlkLEVOJxNzRHUEKtH%2F4i%2BSl9DFQRbCpQstzRdNjg%3D%3D";
+		System.out.println(StringUtil.requestParamEncoding(falseUrl));
+		System.out.println(StringUtil.requestParamEncoding(trueUrl));
+		System.out.println(StringUtil.requestParamEncoding(trueUrl, StringUtil.ISO_8859_1));
+		try {
+			System.out.println(new String(trueUrl.getBytes("UTF-8"),"ASCII"));
+			System.out.println(new String(falseUrl.getBytes("UTF-8"),"ASCII"));
+			System.out.println(URLDecoder.decode(falseUrl, "UTF-8"));
+			System.out.println(URLDecoder.decode(trueUrl, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void mapToString(Map<String, String> map) {
+		String url = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?";
+		for (String key : map.keySet()) {
+			url += key + "=" + map.get(key) + "&";
+		}
+		System.out.println(url);
+	}
+
+	private void test1() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("serviceKey", "B0HQD8ZLlW2LNyCNkg3pjKg5IyY%2F2oJ%2Fm3b92Q%2FUuqW75TlkLEVOJxNzRHUEKtH%2F4i%2BSl9DFQRbCpQstzRdNjg%3D%3D");
+		map.put("stationName", "종로구");
+		map.put("numOfRows", "10");
+		map.put("dataTerm", "DAILY");
+		map.put("_returnType", "json");
+		map.put("pageNo", "1");
+		map.put("startPage", "1");
+		map.put("ver", "1.3");
+		mapToString(map);
+		mapToString(new LatLonRequestModel("종로구").getMap());
+	}
+
+	private void test2() {
+		System.out.println("test2");
+		new Retrofit.Builder()
+		.baseUrl("http://openapi.airkorea.or.kr/")
+		.addConverterFactory(LenientGsonConverterFactory.create())
+		// .addConverterFactory(GsonConverterFactory.create())
+		.client(createClient())
+		.build().create(OpenDataFactoryIm.class)
+		.selectIntegratedAirQuality(new LatLonRequestModel("종로구").getMap()) .enqueue(new Callback<IntegratedAirQualityModel>() {
+
+					@Override
+					public void onResponse(Call<IntegratedAirQualityModel> call, Response<IntegratedAirQualityModel> response) {
+						if (response.isSuccessful()) {
+							System.out.println("body : "+response.body());
+						}
+						System.out.println("not success : "+response.body());
+					}
+
+					@Override
+					public void onFailure(Call<IntegratedAirQualityModel> call, Throwable t) {
+						System.out.println("error : "+t.getMessage());
+					}
+				});
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private OkHttpClient createClient() {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(new CustomIntercepter());
+        return okHttpClientBuilder.build();
+	}
+}

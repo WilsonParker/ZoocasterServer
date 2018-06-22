@@ -1,0 +1,143 @@
+package com.graction.lumi.util.file;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.graction.lumi.dao.FileInformationDAO;
+import com.graction.lumi.data.DataStorage.Attribute;
+import com.graction.lumi.data.DataStorage.Code;
+import com.graction.lumi.data.DataStorage.Key;
+import com.graction.lumi.data.DataStorage.Param;
+import com.graction.lumi.data.DataStorage.Server;
+import com.graction.lumi.model.db.FileInformationTable;
+import com.graction.lumi.model.db.param.ParamUpdateWeatherDetail;
+import com.graction.lumi.model.response.DataResponseModel;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+public class FileManager {
+	private static final HLogger logger = new HLogger(FileManager.class);
+	private static final FileManager instance = new FileManager();
+	
+	private PrintWriter writer;
+	private MultipartFile mFile;
+	private MultipartHttpServletRequest mRequest;
+	
+	public static FileManager getInstance() {
+		return instance;
+	}
+
+
+	/*
+	 * HomeController - weatherManageDetailPage
+	 * 
+	 */
+	public DataResponseModel<ParamUpdateWeatherDetail> weatherDetailUpload(HttpServletRequest request, HttpServletResponse response) {
+		/*
+		 * 200 (code), 1,2,3 (index), a.png, aa.png, empty (fileName)
+		 */
+		DataResponseModel<ParamUpdateWeatherDetail> resModel = new DataResponseModel<ParamUpdateWeatherDetail>();
+		mRequest = (MultipartHttpServletRequest) request;
+//		logger.log(LogType.INFO, "realPath : " + realPath);
+		StringBuilder idx = new StringBuilder()
+					, name = new StringBuilder();
+		try {
+			for (Iterator<String> iterator = mRequest.getFileNames(); iterator.hasNext();) {
+				mFile = mRequest.getFile(iterator.next());
+				// file의 name 을 key 로 하는 경로를 찾는다
+				if (!mFile.isEmpty()) {
+					idx.append(request.getParameter(mFile.getName()+Param.PARAM_DELIMITER+Key.KEY_INDEX)+",");
+					name.append(uploadWithRequest(request)[1]+",");
+				}else {
+					idx.append("-1,");
+					name.append("empty,");
+				}
+			}
+			idx.deleteCharAt(idx.length()-1);
+			name.deleteCharAt(name.length()-1);
+			resModel.setCode(Code.CODE_SUCCESS);
+			logger.log(LogType.INFO, "void weatherDetailupload(HttpServletRequest request, HttpServletResponse response)", "idx : "+idx+" / name : "+name);
+		} catch (Exception e) {
+			logger.log(LogType.ERROR, "uploadFileInRequestInfo2(HttpServletRequest request, HttpServletResponse response)", e);
+			resModel.setCode(Code.CODE_FAIL);
+		}
+		resModel.setResult(new ParamUpdateWeatherDetail(0, idx.toString(), name.toString()));
+		return resModel;
+	}
+	
+	public String insertfileInformation(HttpServletRequest request, HttpServletResponse response) {
+		mRequest = (MultipartHttpServletRequest) request;
+		StringBuilder idx = new StringBuilder();
+		FileInformationDAO dao = ((SqlSession)request.getAttribute(Attribute.ATTR_SQLSESSION)).getMapper(FileInformationDAO.class);
+		try {
+			for (Iterator<String> iterator = mRequest.getFileNames(); iterator.hasNext();) {
+				mFile = mRequest.getFile(iterator.next());
+				if (!mFile.isEmpty()) {
+					String[] result = uploadWithRequest(request);
+					FileInformationTable param = new FileInformationTable(result[0], result[1]);
+					dao.insert_file_information(param);
+					idx.append(param.getFileInformation_index()+",");
+//					logger.log(LogType.INFO, "String insertfileInformation reigonAddUpload(HttpServletRequest request, HttpServletResponse response)", "result : %s %s %d",result[0],result[1], param.getFileInformation_index());
+				}else { idx.append("0,"); }
+			}
+			if(idx.length() > 0)
+				idx.deleteCharAt(idx.length()-1);
+			logger.log(LogType.INFO, "String insertfileInformation reigonAddUpload(HttpServletRequest request, HttpServletResponse response)", "idx : "+idx);
+		} catch (Exception e) {
+			logger.log(LogType.ERROR, "String insertfileInformation(HttpServletRequest request, HttpServletResponse response)", e);
+		}
+		return idx.toString();
+	}
+	
+	// upload file and path (path and name is same)
+	public void uploadFileInRequestInfo(HttpServletRequest request, HttpServletResponse response) {
+		mRequest = (MultipartHttpServletRequest) request;
+//		logger.log(LogType.INFO, "realPath : " + realPath);
+		try {
+			writer = response.getWriter();
+			for (Iterator<String> iterator = mRequest.getFileNames(); iterator.hasNext();) {
+				mFile = mRequest.getFile(iterator.next());
+				// file의 name 을 key 로 하는 경로를 찾는다
+//				realPath = Server.UPLOAD_DIR_REAL_PATH + request.getParameter(mFile.getName());
+//				logger.log(LogType.INFO, "param : " + mFile.getName()+ " : " +request.getParameter(mFile.getName()));
+//				logger.log(LogType.INFO, "realPath: " + realPath);
+				if (!mFile.isEmpty()) {
+					uploadWithRequest(request);
+					writer.println(Code.CODE_SUCCESS);
+				}
+			}
+		} catch (Exception e) {
+			logger.log(LogType.ERROR, "uploadImageInRequestInfo(HttpServletRequest request, HttpServletResponse response)", e);
+			writer.println(Code.CODE_FAIL);
+		}
+	}
+	
+	private String[] uploadWithRequest(HttpServletRequest request) throws IllegalStateException, IOException {
+		String realPath, originName, ext, realName;
+//		realPath = Server.UPLOAD_DIR_REAL_PATH + request.getParameter(mFile.getName()+Param.PARAM_DELIMITER+Key.KEY_PATH);
+		realPath = Server.UPLOAD_DIR_REAL_PATH + request.getParameter(mFile.getName()+Param.PARAM_DELIMITER+Key.KEY_PATH);
+		originName = mFile.getOriginalFilename();
+		ext = originName.substring(originName.lastIndexOf(".") + 1);
+		realName = originName.substring(0, originName.indexOf("."))+"_"+UUID.randomUUID().toString() + "." + ext;
+		mFile.transferTo(new File(realPath + realName));
+//		logger.log(LogType.INFO, "realPath : " + realPath);
+//		logger.log(LogType.INFO, "mFileName : " + mFile.getName());
+//		logger.log(LogType.INFO, "OriginalFilename : " + mFile.getOriginalFilename());
+//		logger.log(LogType.INFO,"Name : "+mFile.getName());	// <input type=file> name
+//		logger.log(LogType.INFO,"Origin Name : " + originName); // upload // file // name
+//		logger.log(LogType.INFO,"size  : " + mFile.getSize()); // size
+//		logger.log(LogType.INFO, "realPath + realName: " + realPath + realname); // size
+		String[] result = {request.getParameter(mFile.getName()+Param.PARAM_DELIMITER+Key.KEY_PATH), realName};
+		return result;
+	}
+}

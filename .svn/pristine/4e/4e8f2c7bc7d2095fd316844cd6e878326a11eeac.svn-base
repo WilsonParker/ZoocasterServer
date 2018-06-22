@@ -1,0 +1,57 @@
+package com.graction.lumi.data;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.graction.lumi.model.response.DailyForecastModel;
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.util.gps.GoogleLocationManager;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+public class DataTableManager {
+	private static final DataTableManager instance = new DataTableManager();
+	private static final String LANGUAGE = "ko";
+
+	private static Map<String, DailyForecastModel> DailyForecastTable = new HashMap<String, DailyForecastModel>();
+	private static Map<String, WeatherModel> WeatherModelTable = new HashMap<String, WeatherModel>();;
+
+	private HLogger logger;
+
+	public DataTableManager() {
+		logger = HLogger.getInstance(getClass());
+	}
+
+	public static DataTableManager getInstance() {
+		return instance;
+	}
+
+	public WeatherModel insertWeatherData(String lat, String lon, WeatherModel model) {
+		String address = GoogleLocationManager.getInstance().getAddress(lat, lon);
+//		String address = GoogleGeoManager.getInstance().getAddress(lat, lon);
+//		String address = NaverLocationManager.getInstance().getAddress(lat, lon);
+
+		logger.log(LogType.INFO, "insertWeatherData(String lat, String lon)", address);
+		model.setAddress(address);
+		WeatherModelTable.put(lat + DataStorage.Server.KEY_LATLNG_SPLIT + lon, model);
+
+		return model;
+	}
+
+	public Map<String, DailyForecastModel> getDailyForecastTable() {
+		return DailyForecastTable;
+	}
+	
+	public DailyForecastModel getDailyForecastModel(String key) {
+		return DailyForecastTable.get(key);
+	}
+
+	public Map<String, WeatherModel> getWeatherModelTable() {
+		return WeatherModelTable;
+	}
+	
+	public WeatherModel getWeatherModel(String key) {
+		return WeatherModelTable.get(key);
+	}
+
+}

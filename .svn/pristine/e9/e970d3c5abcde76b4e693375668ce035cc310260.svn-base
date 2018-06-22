@@ -1,0 +1,17 @@
+package com.graction.lumi.net;
+
+import java.util.Map;
+
+import com.graction.lumi.model.response.FineDustModel;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.QueryMap;
+
+public interface SKPlanetFactoryIm {
+
+	// Fine dust
+	@GET("/weather/dust")
+	Call<FineDustModel> selectFineDust(@QueryMap Map<String, String> map);
+	
+}

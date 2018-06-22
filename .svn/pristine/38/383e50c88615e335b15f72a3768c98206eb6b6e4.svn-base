@@ -1,0 +1,41 @@
+package com.graction.lumi.model.vo;
+
+public class WeatherVO {
+	private int weather_code							// Weather primary code
+				, weather_background_ref_file_index		// Reference backgorund file index
+				, weather_chracter_ref_file_index		// Reference character file index
+				, weather_effect_ref_file_index			// Reference effect file index
+				;
+	private String weather_name;						// Weather name
+	
+	public int getWeather_code() {
+		return weather_code;
+	}
+	public void setWeather_code(int weather_code) {
+		this.weather_code = weather_code;
+	}
+	public int getWeather_background_ref_file_index() {
+		return weather_background_ref_file_index;
+	}
+	public void setWeather_background_ref_file_index(int weather_background_ref_file_index) {
+		this.weather_background_ref_file_index = weather_background_ref_file_index;
+	}
+	public int getWeather_chracter_ref_file_index() {
+		return weather_chracter_ref_file_index;
+	}
+	public void setWeather_chracter_ref_file_index(int weather_chracter_ref_file_index) {
+		this.weather_chracter_ref_file_index = weather_chracter_ref_file_index;
+	}
+	public int getWeather_effect_ref_file_index() {
+		return weather_effect_ref_file_index;
+	}
+	public void setWeather_effect_ref_file_index(int weather_effect_ref_file_index) {
+		this.weather_effect_ref_file_index = weather_effect_ref_file_index;
+	}
+	public String getWeather_name() {
+		return weather_name;
+	}
+	public void setWeather_name(String weather_name) {
+		this.weather_name = weather_name;
+	}
+}

@@ -1,0 +1,64 @@
+package com.graction.lumi.util;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.ui.Model;
+
+import com.graction.lumi.dao.RegionDAO;
+import com.graction.lumi.data.DataStorage;
+import com.graction.lumi.model.xml.address.AddressData;
+import com.graction.lumi.model.xml.weather.WeatherData;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+import com.graction.lumi.util.parser.XmlParserForJAXB;
+
+public class InitializeManager {
+	private static final HLogger logger = HLogger.getInstance(InitializeManager.class);
+	private static final InitializeManager instance = new InitializeManager();
+	private static boolean INIT = false;
+	private SqlSession sqlSession;
+//	private static DaoMapper daoMapper;
+
+	public static InitializeManager getInstance() {
+		return instance;
+	}
+
+	public void init(Model model, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			sqlSession = (SqlSession) request.getAttribute(DataStorage.Attribute.ATTR_SQLSESSION);
+			request.setCharacterEncoding(DataStorage.Server.ENCODING);
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html;charset=UTF-8");
+			response.setHeader("Cache-Control", "no-cache");
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+			model.addAttribute(DataStorage.Attribute.ATTR_REQUEST, request);
+			model.addAttribute(DataStorage.Attribute.ATTR_RESPONSE, response);
+			model.addAttribute(DataStorage.Attribute.ATTR_SQLSESSION, sqlSession);
+//			model.addAttribute(DataStorage.Attribute.ATTR_DAO_MAPPER, sqlSession.getMapper(DaoMapper.class));
+//			InitializeManager.initialize(model, request, response);
+			initParseData();
+			initLog();
+		} catch (Exception e) {
+			logger.log(LogType.ERROR, "init(Model model, HttpServletRequest request, HttpServletResponse response)","init error",e);
+		}
+	}
+	
+	private void initParseData() {
+		DataStorage.weatherData = XmlParserForJAXB.getInstance().parseXmlToObject(WeatherData.class, DataStorage.File.FILE_NAME_XML_WEATHERDATA);
+		DataStorage.addressData = XmlParserForJAXB.getInstance().parseXmlToObject(AddressData.class, DataStorage.File.FILE_NAME_XML_ADDRESSDATA);
+//		logger.log(LogType.INFO,"initParseData()",DataStorage.weatherData.toString());
+//		
+		
+		RegionDAO regionDAO = sqlSession.getMapper(RegionDAO.class);
+//		for(RegionVO regionVO : regionDAO.select_all_region()) { logger.log(LogType.INFO,"initParseData()",regionVO.toString()); }
+		
+	}
+	
+	private void initLog() {
+		logger.log(LogType.INFO,"initParseData()",DataStorage.Path_Directory);
+	}
+	
+}

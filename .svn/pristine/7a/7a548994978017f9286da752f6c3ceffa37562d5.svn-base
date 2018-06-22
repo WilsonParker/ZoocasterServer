@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addressData>
+	<addresses>
+		<address name="특별시">
+			<siList>
+				<si name="서울특별시">
+					<gugunList>
+						<gugun name="중구" />
+						<gugun name="종로구" />
+						<gugun name="서대문구" />
+						<gugun name="마포구" />
+						<gugun name="은평구" />
+						<gugun name="동대문구" />
+						<gugun name="중랑구" />
+						<gugun name="도봉구" />
+						<gugun name="성동구" />
+						<gugun name="강동구" />
+						<gugun name="강남구" />
+						<gugun name="성북구" />
+						<gugun name="서초구" />
+						<gugun name="송파구" />
+						<gugun name="노원구" />
+						<gugun name="용산구" />
+						<gugun name="강북구" />
+						<gugun name="광진구" />
+						<gugun name="영등포구" />
+						<gugun name="관악구" />
+						<gugun name="구로구" />
+						<gugun name="금천구" />
+						<gugun name="동작구" />
+						<gugun name="강서구" />
+						<gugun name="양천구" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+
+		<address name="광역시">
+			<siList>
+				<si name="광주광역시">
+					<gugunList>
+						<gugun name="북구" />
+						<gugun name="동구" />
+						<gugun name="서구" />
+						<gugun name="남구" />
+						<gugun name="광산구" />
+					</gugunList>
+				</si>
+				<si name="대전광역시">
+					<gugunList>
+						<gugun name="동구" />
+						<gugun name="중구" />
+						<gugun name="서구" />
+						<gugun name="유성구" />
+						<gugun name="대덕구" />
+					</gugunList>
+				</si>
+				<si name="인천광역시">
+					<gugunList>
+						<gugun name="중구" />
+						<gugun name="동구" />
+						<gugun name="남구" />
+						<gugun name="부평구" />
+						<gugun name="서구" />
+						<gugun name="남동구" />
+						<gugun name="연수구" />
+						<gugun name="계양구" />
+						<gugun name="옹진군" />
+						<gugun name="강화군" />
+					</gugunList>
+				</si>
+				<si name="부산광역시">
+					<gugunList>
+						<gugun name="중구" />
+						<gugun name="동구" />
+						<gugun name="서구" />
+						<gugun name="사하구" />
+						<gugun name="영도구" />
+						<gugun name="동래구" />
+						<gugun name="남구" />
+						<gugun name="금정구" />
+						<gugun name="연제구" />
+						<gugun name="해운대구" />
+						<gugun name="수영구" />
+						<gugun name="부산진구" />
+						<gugun name="북구" />
+						<gugun name="사상구" />
+						<gugun name="강서구" />
+						<gugun name="기장군" />
+					</gugunList>
+				</si>
+				<si name="울산광역시">
+					<gugunList>
+						<gugun name="남구" />
+						<gugun name="중구" />
+						<gugun name="동구" />
+						<gugun name="북구" />
+						<gugun name="울주군" />
+					</gugunList>
+				</si>
+				<si name="대구광역시">
+					<gugunList>
+						<gugun name="중구" />
+						<gugun name="동구" />
+						<gugun name="북구" />
+						<gugun name="서구" />
+						<gugun name="달서구" />
+						<gugun name="남구" />
+						<gugun name="수성구" />
+						<gugun name="달성군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+
+		<address name="강원도">
+			<siList>
+				<si name="춘천시" />
+				<si name="강릉시" />
+				<si name="속초시" />
+				<si name="원주시" />
+				<si name="태백시" />
+				<si name="동해시" />
+				<si name="삼척시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="화천군" />
+						<gugun name="양양군" />
+						<gugun name="고성군" />
+						<gugun name="횡성군" />
+						<gugun name="영월군" />
+						<gugun name="평창군" />
+						<gugun name="정선군" />
+						<gugun name="홍천군" />
+						<gugun name="인제군" />
+						<gugun name="양구군" />
+						<gugun name="철원군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="경기도">
+			<siList>
+				<si name="수원시">
+					<gugunList>
+						<gugun name="장안구" />
+						<gugun name="권선구" />
+						<gugun name="팔달구" />
+						<gugun name="영통구" />
+					</gugunList>
+				</si>
+				<si name="성남시">
+					<gugunList>
+						<gugun name="수정구" />
+						<gugun name="중원구" />
+						<gugun name="분당구" />
+					</gugunList>
+				</si>
+				<si name="안양시">
+					<gugunList>
+						<gugun name="만안구" />
+						<gugun name="동안구" />
+					</gugunList>
+				</si>
+				<si name="용인시">
+					<gugunList>
+						<gugun name="처인구" />
+						<gugun name="기흥구" />
+						<gugun name="수지구" />
+					</gugunList>
+				</si>
+				<si name="파주시" />
+				<si name="고양시" />
+				<si name="김포시" />
+				<si name="부천시" />
+				<si name="광명시" />
+				<si name="안산시" />
+				<si name="과천시" />
+				<si name="시흥시" />
+				<si name="군포시" />
+				<si name="의왕시" />
+				<si name="화성시" />
+				<si name="오산시" />
+				<si name="평택시" />
+				<si name="안성시" />
+				<si name="광주시" />
+				<si name="하남시" />
+				<si name="이천시" />
+				<si name="여주군" />
+				<si name="구리시" />
+				<si name="남양주시" />
+				<si name="양평군" />
+				<si name="가평군" />
+				<si name="의정부시" />
+				<si name="양주시" />
+				<si name="동두천시" />
+				<si name="포천시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="연천군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="전라남도">
+			<siList>
+				<si name="나주시" />
+				<si name="목포시" />
+				<si name="광양시" />
+				<si name="순천시" />
+				<si name="여수시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="영광군" />
+						<gugun name="장성군" />
+						<gugun name="곡성군" />
+						<gugun name="담양군" />
+						<gugun name="화순군" />
+						<gugun name="함평군" />
+						<gugun name="영암군" />
+						<gugun name="강진군" />
+						<gugun name="장흥군" />
+						<gugun name="무안군" />
+						<gugun name="신안군" />
+						<gugun name="해남군" />
+						<gugun name="완도군" />
+						<gugun name="진도군" />
+						<gugun name="구례군" />
+						<gugun name="보성군" />
+						<gugun name="고흥군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="전라북도">
+			<siList>
+				<si name="전주시">
+					<gugunList>
+						<gugun name="완산구" />
+						<gugun name="덕진구" />
+					</gugunList>
+				</si>
+				<si name="전주시" />
+				<si name="익산시" />
+				<si name="군산시" />
+				<si name="김제시" />
+				<si name="정읍시" />
+				<si name="남원시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="완주군" />
+						<gugun name="임실군" />
+						<gugun name="진안군" />
+						<gugun name="무주군" />
+						<gugun name="부안군" />
+						<gugun name="고창군" />
+						<gugun name="순창군" />
+						<gugun name="장수군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="충청남도">
+			<siList>
+				<si name="천안시">
+					<gugunList>
+						<gugun name="동남구" />
+						<gugun name="서북구" />
+					</gugunList>
+				</si>
+				<si name="공주시" />
+				<si name="논산시" />
+				<si name="계룡시" />
+				<si name="아산시" />
+				<si name="보령시" />
+				<si name="서산시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="금산군" />
+						<gugun name="부여군" />
+						<gugun name="서천군" />
+						<gugun name="예산군" />
+						<gugun name="당진군" />
+						<gugun name="청양군" />
+						<gugun name="홍성군" />
+						<gugun name="태안군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="충청북도">
+			<siList>
+				<si name="청주시">
+					<gugunList>
+						<gugun name="상당구" />
+						<gugun name="서원구" />
+						<gugun name="흥덕구" />
+						<gugun name="청원구" />
+					</gugunList>
+				</si>
+				<si name="충주시" />
+				<si name="제천시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="청원군" />
+						<gugun name="진천군" />
+						<gugun name="괴산군" />
+						<gugun name="증평군" />
+						<gugun name="음성군" />
+						<gugun name="영동군" />
+						<gugun name="옥천군" />
+						<gugun name="보은군" />
+						<gugun name="단양군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="경상남도">
+			<siList>
+				<si name="창원시">
+					<gugunList>
+						<gugun name="의창구" />
+						<gugun name="성산구" />
+						<gugun name="마산합포구" />
+						<gugun name="마산회원구" />
+						<gugun name="진해구" />
+					</gugunList>
+				</si>
+				<si name="김해시" />
+				<si name="양산시" />
+				<si name="밀양시" />
+				<si name="고성군" />
+				<si name="통영시" />
+				<si name="거제시" />
+				<si name="진주시" />
+				<si name="사천시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="창녕군" />
+						<gugun name="의령군" />
+						<gugun name="함안군" />
+						<gugun name="산청군" />
+						<gugun name="하동군" />
+						<gugun name="남해군" />
+						<gugun name="거창군" />
+						<gugun name="함양군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="경상북도">
+			<siList>
+				<si name="포항시">
+					<gugunList>
+						<gugun name="남구" />
+						<gugun name="북구" />
+					</gugunList>
+				</si>
+				<si name="경산시" />
+				<si name="구미시" />
+				<si name="김천시" />
+				<si name="상주시" />
+				<si name="문경시" />
+				<si name="영주시" />
+				<si name="안동시" />
+				<si name="영천시" />
+				<si name="경주시" />
+				<si name="시">
+					<gugunList>
+						<gugun name="봉화군" />
+						<gugun name="예천군" />
+						<gugun name="청송군" />
+						<gugun name="영양군" />
+						<gugun name="영덕군" />
+						<gugun name="울진군" />
+						<gugun name="의성군" />
+						<gugun name="청도군" />
+						<gugun name="군위군" />
+						<gugun name="고령군" />
+						<gugun name="칠곡군" />
+						<gugun name="성주군" />
+						<gugun name="울릉군" />
+					</gugunList>
+				</si>
+			</siList>
+		</address>
+		<address name="세종특별자치시">
+			<siList>
+			</siList>
+		</address>
+		<address name="제주특별자치도">
+			<siList>
+				<si name="제주시" />
+				<si name="서귀포시" />
+			</siList>
+		</address>
+	</addresses>
+</addressData>

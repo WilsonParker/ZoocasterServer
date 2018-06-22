@@ -1,0 +1,13 @@
+package com.graction.lumi.data;
+
+import com.graction.lumi.model.response.WeatherModel;
+
+public class WeatherDataProvider {
+	private static final WeatherDataProvider instance = new WeatherDataProvider();
+	
+	public WeatherModel setWeatherdata(WeatherModel weatherModel) {
+		WeatherModel result = weatherModel;
+		
+		return result;
+	}
+}

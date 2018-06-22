@@ -1,0 +1,74 @@
+<%@ page import="com.graction.lumi.util.format.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.graction.lumi.data.*"%>
+<%@ page import="com.graction.lumi.model.response.*"%>
+<%@ page import="com.graction.lumi.model.xml.weather.*"%>
+
+<%
+	Map<String, WeatherModel> map = DataTableManager.getInstance().getWeatherModelTable();
+%>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Latitude</th>
+			<th>Longitude</th>
+			<th>Date</th>
+			<th>Address</th>
+			<th>Weather</th>
+			<th>Description</th>
+			<th>Temperature</th>
+		</tr>
+	</thead>
+	<tbody>
+	<%
+		for(String key : map.keySet()) {
+			String[] latlng = key.split(DataStorage.Server.KEY_LATLNG_SPLIT);
+			WeatherModel model = map.get(key);
+	%>
+		<tr>
+			<td><%=NumberFormatManager.getInstatnce().round(latlng[0],5)%></td>
+			<td><%=NumberFormatManager.getInstatnce().round(latlng[1],5)%></td>
+			<td><%=DateManager.getInstance().longToDate(model.getDt())%></td>
+			<td><%=model.getAddress()%></td>
+			<td>
+				<select name="" onchange="weatherIdChange('<%=key %>',this)">
+					<%
+						for(Weather weather : DataStorage.weatherData.getWeathers().getWeather()){
+					%>
+					<option 
+						<%
+							if(model.getFirstWeather().getId() == weather.getId()){
+						%>
+					selected
+						<% } %>
+					value="<%=weather.getId()%>"><%=weather.getMessage()%></option>
+					<% } %>
+				</select>
+			</td>
+			<td><%=model.getFirstWeather().getDescription()%></td>
+			<td><%=TemperatureManager.getInstance().kelvinToCelsius(model.getMain().getTemp())%></td>
+		</tr>
+	<% } %>
+		
+	</tbody>
+</table>
+
+
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>commonScript.js"></script>
+<script>
+	function weatherIdChange(key, select){
+		console.log(select.value);
+		$.ajax({
+			url :"<%=DataStorage.Server.PACKAGE_NAME+DataStorage.Mapping.MAPPING_WEATHER_ID_CHANGE%>",
+			data : {
+				"<%=DataStorage.Key.KEY_WEATHER_ID%>":select.value,
+				"<%=DataStorage.Key.KEY_WEATHER_KEY%>":key
+					},
+			complete : function(result){
+				location.reload();
+			}
+		});
+	}
+</script>

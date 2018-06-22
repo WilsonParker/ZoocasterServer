@@ -1,0 +1,24 @@
+package com.graction.lumi.util;
+
+import java.util.Collection;
+
+public class StringUtil {
+	
+	
+	public static String getDefaultString(String s, String def) {
+		if (s.equals(""))
+			return def;
+		else
+			return s;
+	}
+
+	// List to String
+	public static <E> String createString(String root, String child, Collection<E> items) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{" + root + " : { " + child + " [");
+		for (E e : items)
+			sb.append(e.toString() + ",");
+		sb.append("]}}");
+		return sb.toString();
+	}
+}

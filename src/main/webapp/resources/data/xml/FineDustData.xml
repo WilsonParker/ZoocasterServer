@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fineDustData>
+	<fineDust start="0" end="30" grade="좋음"/>
+	<fineDust start="31" end="80" grade="보통"/>
+	<fineDust start="81" end="120" grade="약간나쁨"/>
+	<fineDust start="121" end="200" grade="나쁨"/>
+	<fineDust start="201" end="300" grade="매우나쁨"/>
+</fineDustData>

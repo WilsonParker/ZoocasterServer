@@ -1,0 +1,34 @@
+package com.graction.lumi.util.db;
+
+import java.text.ParseException;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.graction.lumi.data.DataStorage.Database;
+import com.graction.lumi.util.format.DateManager;
+
+public class DatabaseManager {
+	private JdbcTemplate jdbcTemplate;
+
+	public DatabaseManager(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	public void insertQuery(String query) {
+		jdbcTemplate.execute(query);
+	}
+	
+	public void createRegionReversationEvent(int index, String startTime, String endTime) throws ParseException {
+		final String EVENT_NAME = "regionReversationEvent_", START = EVENT_NAME+"start_", END = EVENT_NAME+"end_";
+		DateManager dateManager = DateManager.getInstance();
+		String reStartTime;
+		String reEndTime = dateManager.stringDateReformat(DateManager.DATABASE_TIMESTAMP_FORMAT, endTime);
+		if(dateManager.stringToTime(startTime) < System.currentTimeMillis())
+			reStartTime = "CURRENT_TIMESTAMP + INTERVAL 10 SECOND";
+		else
+			reStartTime = "'"+dateManager.stringDateReformat(DateManager.DATABASE_TIMESTAMP_FORMAT, startTime)+"'";
+		String query = "DROP EVENT IF EXISTS "+START+index+"; CREATE EVENT "+START+index+" ON SCHEDULE AT "+reStartTime+" DO call "+Database.Procedure.UPDATE_REGION_REVERSATION_EVENT+"("+index+", 'ACTIVATION');"
+				+ "DROP EVENT IF EXISTS "+END+index+"; CREATE EVENT "+END+index+" ON SCHEDULE AT '"+reEndTime+"' DO call "+Database.Procedure.UPDATE_REGION_REVERSATION_EVENT+"("+index+", 'TERMINATED');";
+		jdbcTemplate.execute(query);
+	}
+}

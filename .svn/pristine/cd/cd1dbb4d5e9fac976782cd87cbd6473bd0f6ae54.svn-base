@@ -1,0 +1,226 @@
+package com.graction.lumi.controller;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.graction.lumi.data.DataStorage.Mapping;
+import com.graction.lumi.data.DataStorage.Server;
+import com.graction.lumi.data.DataTableManager;
+import com.graction.lumi.data.WeatherDataProvider;
+import com.graction.lumi.model.request.LatLonRequestModel;
+import com.graction.lumi.model.response.DailyForecastModel;
+import com.graction.lumi.model.response.FineDustModel;
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.net.Net;
+import com.graction.lumi.util.DataProvideManager;
+import com.graction.lumi.util.DataProvideManager.Complete;
+import com.graction.lumi.util.DataProvideManager.Execution;
+import com.graction.lumi.util.WriteManager;
+import com.graction.lumi.util.log.HLogger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+@RequestMapping(Mapping.MAPPING_ROOT_APP)
+public class AppController {
+
+	private static final HLogger logger = new HLogger(AppController.class);
+	private boolean isComplete = false;
+	private String lat, lon;
+
+	private DataProvideManager dataProvideManager;
+	private DailyForecastModel dailyForecastModel;
+	private WeatherModel weatherModel;
+	private FineDustModel fineDustModel;
+	// private StringBuilder builder;
+	private DataTableManager dataTableManager = DataTableManager.getInstance();
+
+	/*
+	 * 16 day forecast
+	 * Using OpenWeather API
+	 */
+	@ResponseBody
+	@RequestMapping(value = Mapping.MAPPING_DAILYFORECAST, method = RequestMethod.GET)
+	public void dailyforecast(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) {
+		lat = httpServlerRequest.getParameter(Server.PARAM_LAT);
+		lon = httpServlerRequest.getParameter(Server.PARAM_LON);
+		dataProvideManager = new DataProvideManager(new Execution() {
+
+			@Override
+			public void excution() {
+				Net.getInstance().getOpenWeatherFactoryIm().selectForecastDaily(new LatLonRequestModel(lat, lon).getMap())
+				.enqueue(new Callback<DailyForecastModel>() {
+
+					@Override
+					public void onResponse(Call<DailyForecastModel> call, Response<DailyForecastModel> response) {
+						if (response.isSuccessful()) {
+							dailyForecastModel = response.body();
+						} else {
+							logger.log(HLogger.LogType.WARN, "onResponse(Call<DailyForecast> call, Response<DailyForecast> response)", "warn is not successful");
+						}
+						dataProvideManager.complete();
+					}
+
+					@Override
+					public void onFailure(Call<DailyForecastModel> call, Throwable t) {
+						logger.log(HLogger.LogType.ERROR, "onFailure(Call<DailyForecast> call, Throwable t)", "error is not successful", t);
+						dataProvideManager.complete();
+					}
+				});
+			}
+
+		}, new Complete() {
+
+			@Override
+			public void complete() {
+				try {
+					WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(dailyForecastModel));
+				} catch (Exception e) {
+					logger.log(HLogger.LogType.ERROR, "void dailyforecast(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Thread sleep Exception", e);
+					e.printStackTrace();
+				}
+			}
+		});
+		try {
+			dataProvideManager.execution();
+		} catch (InterruptedException e) {
+			logger.log(HLogger.LogType.ERROR, "void dailyforecast(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Thread sleep Exception", e);
+		}
+	}
+
+	/*
+	 * Current Weather
+	 * Using OpenWeather API
+	 */
+	@RequestMapping(value = Mapping.MAPPING_CURRENT_WEATHER, method = RequestMethod.GET)
+	public void current_weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) {
+		lat = httpServlerRequest.getParameter(Server.PARAM_LAT);
+		lon = httpServlerRequest.getParameter(Server.PARAM_LON);
+		isComplete = false;
+		dataProvideManager = new DataProvideManager(new Execution() {
+			
+			@Override
+			public void excution() {
+				Net.getInstance().getOpenWeatherFactoryIm().selectWeather(new LatLonRequestModel(lat, lon).getMap())
+				.enqueue(new Callback<WeatherModel>() {
+
+					@Override
+					public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+						if (response.isSuccessful()) {
+							weatherModel = response.body();
+							weatherModel = dataTableManager.insertWeatherData(lat, lon, weatherModel);
+							weatherModel = WeatherDataProvider.getInstance().setWeatherdata(weatherModel);
+							logger.log(HLogger.LogType.INFO, "void current_weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - onResponse(Call<WeatherModel> call, Response<WeatherModel> response)", "current weather insert successful");
+						} else {
+							logger.log(HLogger.LogType.WARN, "void current_weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - onResponse(Call<WeatherModel> call, Response<WeatherModel> response)", "current weather insert is not successful");
+						}
+						dataProvideManager.complete();
+					}
+
+					@Override
+					public void onFailure(Call<WeatherModel> call, Throwable t) {
+						logger.log(HLogger.LogType.ERROR, "void current_weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - onFailure(Call<WeatherModel> call, Throwable t)", "error is not successful", t);
+						dataProvideManager.complete();
+					}
+				});
+				
+			}
+		}, new Complete() {
+			
+			@Override
+			public void complete() {
+				try {
+					// logger.log(HLogger.LogType.INFO, "void weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", new Gson().toJson(weatherModel));
+					WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(weatherModel));
+				} catch (IOException e) {
+					logger.log(HLogger.LogType.ERROR, "void current_weather(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Thread sleep Exception", e);
+				}				
+			}
+		});
+		/*if ((weatherModel = dataTableManager.getWeatherModel(lat + Server.KEY_LATLNG_SPLIT + lon)) != null) {
+			dataProvideManager.complete();
+		} else {
+			dataProvideManager.execution();
+		}*/
+		try {
+			dataProvideManager.execution();
+		} catch (InterruptedException e) {
+			logger.log(HLogger.LogType.ERROR, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Thread sleep Exception", e);
+		}
+		/*try {
+			while (!isComplete)
+				Thread.sleep(500);
+			WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(weatherModel));
+		} catch (Exception e) {
+			logger.log(HLogger.LogType.ERROR, "Exception", "Thread sleep Exception", e);
+			e.printStackTrace();
+		}*/
+	}
+	
+	/*
+	 * Fine Dust
+	 * Using SK Planet API
+	 */
+	@RequestMapping(value = Mapping.MAPPING_FINE_DUST, method = RequestMethod.GET)
+	public void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) {
+		// FineDustData fineDustData = XmlParserForJAXB.getInstance().parseXmlToObject(FineDustData.class, File.FILE_NAME_XML_FINEDUSTDATA);
+		// logger.log(HLogger.LogType.INFO, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - void onResponse(Call<WeatherModel> call, Response<WeatherModel> response)", "fineDustData : "+fineDustData);
+		
+		lat = httpServlerRequest.getParameter(Server.PARAM_LAT);
+		lon = httpServlerRequest.getParameter(Server.PARAM_LON);
+		logger.log(HLogger.LogType.INFO, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - void onResponse(Call<WeatherModel> call, Response<WeatherModel> response)", "current weather insert successful");
+		dataProvideManager = new DataProvideManager(new Execution() {
+			
+			@Override
+			public void excution() {
+				Net.getInstance().getSKPlanetFactoryIm().selectFineDust(new LatLonRequestModel(lat, lon, LatLonRequestModel.KEY_SK_PLANET).getMap()).enqueue(new Callback<FineDustModel>() {
+					
+					@Override
+					public void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response) {
+						if (response.isSuccessful()) {
+							fineDustModel = response.body();
+							logger.log(HLogger.LogType.INFO, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response)", "fine dust select successful");
+						} else {
+							logger.log(HLogger.LogType.WARN, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - void onResponse(Call<FineDustModel> arg0, Response<FineDustModel> response)", "fine dust select not successful");
+						}
+						dataProvideManager.complete();
+					}
+					
+					@Override
+					public void onFailure(Call<FineDustModel> arg0, Throwable t) {
+						logger.log(HLogger.LogType.ERROR, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse) - void onFailure(Call<FineDustModel> arg0, Throwable t)", t);	
+					}
+				});
+				
+			}
+		}, new Complete() {
+			
+			@Override
+			public void complete() {
+				try {
+					WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(fineDustModel));
+				} catch (IOException e) {
+					logger.log(HLogger.LogType.ERROR, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Complete Error", e);
+				}				
+			}
+		});
+		try {
+			dataProvideManager.execution();
+		} catch (InterruptedException e) {
+			logger.log(HLogger.LogType.ERROR, "void fineDust(HttpServletRequest httpServlerRequest, final HttpServletResponse httpServletResponse)", "Thread sleep Exception", e);
+		}
+	}
+}

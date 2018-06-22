@@ -1,0 +1,38 @@
+package com.graction.lumi.util.parser;
+
+import java.io.File;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import com.graction.lumi.data.DataStorage;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+public class XmlParserForJAXB {
+	private static final XmlParserForJAXB instance = new XmlParserForJAXB();
+	private HLogger logger;
+
+	public XmlParserForJAXB() {
+		logger = HLogger.getInstance(getClass());
+	}
+
+	public static XmlParserForJAXB getInstance() {
+		return instance;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T parseXmlToObject(Class<?> cls, String fileName) {
+		T t = null;
+		try {
+			JAXBContext jc = JAXBContext.newInstance(cls);
+			Unmarshaller unMarshaller = jc.createUnmarshaller();
+			t = (T) unMarshaller.unmarshal(new File(DataStorage.Path_Directory + DataStorage.Path.PATH_DIR_XML + fileName));
+		} catch (JAXBException e) {
+			logger.log(LogType.ERROR, "xml init error", e);
+		}
+		return t;
+	}
+
+}

@@ -1,0 +1,21 @@
+function log(msg) {
+	console.log(msg);
+};
+
+function movePage(page) {
+	$.ajax({
+		url : page,
+		success : function(result){
+			$("#content").html(result);
+		}
+	})
+};
+
+
+
+
+
+
+/*
+ * ############################################################################################################################################
+ */

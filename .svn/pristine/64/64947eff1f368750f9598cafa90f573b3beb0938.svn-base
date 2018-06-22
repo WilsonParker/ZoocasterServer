@@ -1,0 +1,10 @@
+package com.graction.lumi.dao;
+
+import java.util.ArrayList;
+
+import com.graction.lumi.model.db.RegionTable;
+
+public interface RegionDAO {
+	
+	public ArrayList<RegionTable> select_all_region();
+}

@@ -1,0 +1,140 @@
+package com.graction.lumi.controller;
+
+import java.util.Iterator;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.graction.lumi.data.DataStorage;
+import com.graction.lumi.data.DataStorage.Attribute;
+import com.graction.lumi.data.DataStorage.Key;
+import com.graction.lumi.data.DataStorage.Mapping;
+import com.graction.lumi.data.DataStorage.Param;
+import com.graction.lumi.data.DataStorage.Path;
+import com.graction.lumi.data.DataTableManager;
+import com.graction.lumi.model.xml.weather.Weather;
+import com.graction.lumi.util.InitializeManager;
+import com.graction.lumi.util.file.FileManager;
+import com.graction.lumi.util.log.HLogger;
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class HomeController {
+	private static final HLogger logger = new HLogger(HomeController.class);
+	@Autowired
+	private SqlSession sqlSession;
+	
+	/*
+	 * Home Page
+	 */
+	@RequestMapping(value = Mapping.MAPPING_INDEX, method = RequestMethod.GET)
+	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
+		/*Date date = new Date();
+		String formattedDate = dateFormat.format(date);
+		model.addAttribute("serverTime", formattedDate );*/
+		request.setAttribute(Attribute.ATTR_SQLSESSION, sqlSession);
+		InitializeManager.getInstance().init(model, request, response);
+		return Path.PATH_VIEW_FRAME;
+	}
+	
+	/*
+	 * Home Page
+	 */
+	@RequestMapping(value = Mapping.MAPPING_HOME, method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		return Path.PATH_VIEW_HOME;
+	}
+	
+	/*
+	 * Weather Manage Page
+	 * Can see the list of cached weather
+	 */
+	@RequestMapping(value = Mapping.MAPPING_MANAGE_WEATHER, method = RequestMethod.GET)
+	public String manage_weather(Model model) {
+		return Path.PATH_VIEW_MANAGE_WEATHER;
+	}
+	
+	
+	/*
+	 * Style Page
+	 */
+	@RequestMapping(value = Mapping.MAPPING_STYLE)
+	public String stylePage(Model model, HttpServletRequest request) {
+		return Path.PATH_VIEW_STYLE;
+	}
+	
+	/*
+	 * Script Page
+	 */
+	@RequestMapping(value = Mapping.MAPPING_SCRIPT)
+	public String scriptPage(Model model, HttpServletRequest request) {
+		return Path.PATH_VIEW_SCRIPT;
+	}
+	
+	/*
+	 * Weather image manage Page
+	 * show weather list
+	 */
+	@RequestMapping(value = Mapping.MAPPING_MANAGE_WEATHER_IMAGE)
+	public String weatherManagePage(Model model, HttpServletRequest request) {
+//		request.setAttribute(Attribute.ATTR_WEATHER_TABLES, sqlSession.getMapper(WeatherDAO.class).selectAllWeathers());
+		model.addAttribute(Attribute.ATTR_CONTENT,Path.PATH_VIEW_MANAGE_WEATHER_IMAGE);
+		return Path.PATH_VIEW_FRAME;
+	}
+	
+	/*
+	 * Weather image Detail Page
+	 * manage Weather Image
+	 */
+	@RequestMapping(value = Mapping.MAPPING_MANAGE_WEATHER_DETAIL)
+	public String weatherManageDetailPage(Model model, HttpServletRequest request, @RequestParam(Param.PARAM_CODE) int code) {
+		if(!DataTableManager.getInstance().isWeatherTableCreated())
+			DataTableManager.getInstance().initDBWeatherTable(sqlSession);
+//		request.setAttribute(Attribute.ATTR_WEATHER_TABLES, sqlSession.getMapper(WeatherDAO.class).selectAllWeathers());
+		model.addAttribute(Attribute.ATTR_CONTENT,Path.PATH_VIEW_MANAGE_WEATHER_DETAIL);
+//		model.addAttribute(Attribute.ATTR_MAP, DataParser.getInstance().objToMap(DataTableManager.getInstance().getDBWeatherTable(code)));
+		model.addAttribute(Attribute.ATTR_WEATHER_TABLE, DataTableManager.getInstance().getDBWeatherTable(code));
+		return Path.PATH_VIEW_FRAME;
+	}
+	
+	/*
+	 * Weather id change
+	 * Action when weather changed
+	 */
+	@RequestMapping(value = Mapping.MAPPING_WEATHER_ID_CHANGE, method = RequestMethod.GET)
+	public void weatherIdChange(HttpServletRequest request) {
+		String key = request.getParameter(Key.KEY_WEATHER_KEY);
+		int id = Integer.parseInt(request.getParameter(Key.KEY_WEATHER_ID));
+		com.graction.lumi.model.weather.Weather weather = DataTableManager.getInstance().getWeatherModel(key).getFirstWeather();
+		weather.setId(id);
+		for(Iterator<Weather> iterator = DataStorage.weatherData.getWeathers().getWeather().iterator(); iterator.hasNext();) {
+			Weather w= iterator.next();
+			 if(w.getId() == id){
+				 weather.setDescription(w.getMessage());
+				 break;
+			 }
+		}
+	}
+	
+	/*
+	 * upload image file
+	 * It runs when upload images
+	 */
+	@RequestMapping(value = Mapping.weatherDetailupload, method = RequestMethod.POST)
+	public void weatherDetailupload(HttpServletRequest request, HttpServletResponse response) {
+		FileManager.getInstance().weatherDetailupload(request, response);
+	}
+}
+
+//file:///C:/Developer/Server/apache-tomcat-9.0.0.M26 STS/wtpwebapps/Lumi/assets/images/background/sunny.jpg

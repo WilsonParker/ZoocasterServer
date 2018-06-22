@@ -1,0 +1,36 @@
+package com.graction.lumi.util;
+
+public class DataProvideManager{
+	private Execution execution;
+	private Complete complete;
+	private boolean isProceeding = true;
+	
+	public DataProvideManager(Execution execution, Complete complete) {
+		super();
+		this.execution = execution;
+		this.complete = complete;
+	}
+
+	public void execution() throws InterruptedException {
+		execution.excution();
+		proceeding();
+	}
+	
+	public void complete() {
+		isProceeding = false;
+		complete.complete();
+	}
+	
+	private void proceeding() throws InterruptedException{
+		while(isProceeding)
+			Thread.sleep(200);
+	}
+	
+	public interface Execution{
+		public void excution();
+	}
+	public interface Complete{
+		public void complete();
+	}
+	
+}

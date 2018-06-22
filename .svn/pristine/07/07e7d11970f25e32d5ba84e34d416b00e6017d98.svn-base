@@ -1,0 +1,97 @@
+<%@ page import="com.graction.lumi.util.format.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.graction.lumi.data.*"%>
+<%@ page import="com.graction.lumi.model.response.*"%>
+<%@ page import="com.graction.lumi.model.db.*"%>
+
+<%
+	Map<String, Map<String, ArrayList<RegionTable>>> map = DataTableManager.getInstance()
+			.getDBWeatherRegionTable();
+%>
+<link rel="stylesheet" href="<%=DataStorage.Path.PATH_DIR_CSS%>tree.css" />
+
+
+<ol class="breadcrumb">
+	<li class="breadcrumb-item"><a href="#">Region Reservation Manage</a></li>
+	<li class="breadcrumb-item active">Add reservation by region</li>
+</ol>
+
+<div class="row">
+	<div class="col-lg-6">
+		<div class="card mb-3">
+			<div class="card-header">
+				<i class="fa fa-bar-chart"></i> Select Region
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<ul id="tree2">
+						<%
+							String common_li1 = "<li class=\"clickable\" region=\"",
+									common_li2 = "\"><span class=\"sp-checkable fa fa-fw fa-square-o\">&nbsp;</span>";
+							Map<String, Map<String, ArrayList<RegionTable>>> rootTable = DataTableManager.getInstance()
+									.getDBWeatherRegionTable();
+							for (String regionRoot : rootTable.keySet()) {
+						%>
+						<%=common_li1 + regionRoot + common_li2 + regionRoot%>
+						<ul>
+							<%
+								Map<String, ArrayList<RegionTable>> siTable = rootTable.get(regionRoot);
+									for (String si : siTable.keySet()) {
+							%>
+							<%=common_li1 + regionRoot + " " + si + common_li2 + si%>
+							<%
+								if (siTable.get(si).size() > 0) {
+							%>
+							<ul>
+								<%
+									for (RegionTable gugun : siTable.get(si)) {
+								%>
+								<%=common_li1 + gugun + common_li2 + gugun.getRegion_GUGUN() + "</li>"%>
+								<%
+									}
+								%>
+							</ul>
+							<%
+								}
+							%>
+							</li>
+							<%
+								}
+							%>
+						</ul>
+						</li>
+						<%
+							}
+						%>
+					</ul>
+				</div>
+			</div>
+			<div class="card-footer small text-muted">Updated yesterday at
+				11:59 PM</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6">
+		<div class="card mb-3">
+			<div class="card-header">
+				<i class="glyphicon glyphicon-calendar fa fa-calendar"></i> Select Date
+			</div>
+			<div class="card-body">
+				<!-- Calendar -->
+				<div class="input-group">
+					<input type="text" class="form-control" name="daterange" readonly>
+				</div>
+			</div>
+			<div class="card-footer small text-muted">Updated yesterday at
+				11:59 PM</div>
+		</div>
+	</div>
+</div>
+
+
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>jquery-3.2.1.min.js"></script>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>commonScript.js"></script>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>tree.js"></script>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>DateScript.js"></script>

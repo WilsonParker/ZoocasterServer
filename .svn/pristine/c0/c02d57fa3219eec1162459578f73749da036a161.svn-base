@@ -1,0 +1,185 @@
+package com.graction.lumi.data;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.graction.lumi.dao.FineDustDAO;
+import com.graction.lumi.dao.RegionDAO;
+import com.graction.lumi.dao.WeatherDAO;
+import com.graction.lumi.data.DataStorage.Server;
+import com.graction.lumi.model.db.RegionTable;
+import com.graction.lumi.model.response.DailyForecastModel;
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.model.vo.FineDustVO;
+import com.graction.lumi.model.vo.RegionReservationVO;
+import com.graction.lumi.model.vo.RegionVO;
+import com.graction.lumi.model.vo.WeatherVO;
+import com.graction.lumi.util.gps.GoogleLocationManager;
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+public class DataTableManager {
+	private static final DataTableManager instance = new DataTableManager();
+	private static final String LANGUAGE = "ko";
+
+	private Map<String, DailyForecastModel> DailyForecastTable = new HashMap<String, DailyForecastModel>();
+	private Map<String, WeatherModel> WeatherModelTable = new HashMap<String, WeatherModel>();
+
+	private Map<String, Map<String, ArrayList<RegionTable>>> DBWeatherRegionTable = new HashMap<String, Map<String, ArrayList<RegionTable>>>();
+	private Map<Integer, WeatherVO> DBWeatherTableMap = new HashMap<Integer, WeatherVO>();
+	private List<WeatherVO> DBWeatherVOList;
+	private boolean isWeatherTableCreated = false;
+	private boolean isWeatherRegionCreated = false;
+	
+	private List<RegionReservationVO> DBRegionReservationList = new ArrayList<RegionReservationVO>();
+	private final long RegionReservationLastUpdateCicle = 1000;	// ms
+	private long regionReservationLastUpdateTime = 0;
+	
+	private List<FineDustVO> DBFineDUstList = new ArrayList<FineDustVO>();
+	private final long FineDustLastUpdateCicle = 1000;	// ms
+	private long fineDustLastUpdateTime = 0;
+	
+	private HLogger logger;
+	private SqlSession sqlSession;
+	
+	public DataTableManager() {
+		logger = new HLogger(getClass());
+	}
+
+	public static DataTableManager getInstance() {
+		return instance;
+	}
+
+	public void setSqlSession(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+
+	public void initDBWeatherTable(SqlSession sqlSession) {
+		try {
+			if (!isWeatherTableCreated) {
+				WeatherDAO dao = sqlSession.getMapper(WeatherDAO.class);
+				DBWeatherVOList = dao.selectAllWeathers();
+				DBWeatherVOList.parallelStream().forEach(new Consumer<WeatherVO>() {
+					@Override
+					public void accept(WeatherVO t) {
+						DBWeatherTableMap.put(t.getWeather_code(), t);
+					}
+				});
+				isWeatherTableCreated = true;
+			}
+		} catch (Exception e) {
+			logger.log(LogType.ERROR, "void initDBWeatherTable(SqlSession sqlSession)", e);
+		}
+		setSqlSession(sqlSession);
+	}
+	
+	public void initDBWeatherRegionTable(SqlSession sqlSession) {
+		if (!isWeatherRegionCreated) {
+			RegionDAO dao = sqlSession.getMapper(RegionDAO.class);
+			RegionVO regionVO = new RegionVO();
+			ArrayList<RegionTable> regionList = dao.select_all_region(regionVO);
+			// logger.log(LogType.INFO, "regionList : " + regionList.size());
+			
+			for(RegionTable vo : regionList) {
+				String sido = vo.getRegion_SIDO(), si = vo.getRegion_SI(), gugun = vo.getRegion_GUGUN();
+				ArrayList<RegionTable> gugunList = new ArrayList<RegionTable>();
+				if (DBWeatherRegionTable.containsKey(sido)) {
+					if (DBWeatherRegionTable.get(sido).containsKey(si)) {
+						DBWeatherRegionTable.get(sido).get(si).add(vo);
+					} else {
+						if (!gugun.equals(""))
+							gugunList.add(vo);
+						DBWeatherRegionTable.get(sido).put(si, gugunList);
+					}
+				} else {
+					Map<String, ArrayList<RegionTable>> siMap = new HashMap<String, ArrayList<RegionTable>>();
+					if (!gugun.equals(""))
+						gugunList.add(vo);
+					siMap.put(si, gugunList);
+					DBWeatherRegionTable.put(sido, siMap);
+				}
+			}
+			isWeatherRegionCreated = true;
+		}
+		setSqlSession(sqlSession);
+	}
+
+	public WeatherModel insertWeatherData(String lat, String lon, WeatherModel model) {
+		String address = GoogleLocationManager.getInstance().getAddress(lat, lon);
+		// String address = GoogleGeoManager.getInstance().getAddress(lat, lon);
+		// String address = NaverLocationManager.getInstance().getAddress(lat,
+		// lon);
+
+		logger.log(LogType.INFO, "insertWeatherData(String lat, String lon)", address);
+		logger.log(LogType.INFO, "insertWeatherData(String lat, String lon)", model.toString());
+		model.setAddress(address);
+		WeatherModelTable.put(lat + Server.KEY_LATLNG_SPLIT + lon, model);
+		
+		return model;
+	}
+
+	public List<RegionReservationVO> getDBRegionReservationList() {
+		long now = System.currentTimeMillis();
+		if(now > regionReservationLastUpdateTime + RegionReservationLastUpdateCicle) {
+			RegionDAO dao = sqlSession.getMapper(RegionDAO.class);
+			DBRegionReservationList = dao.select_region_reservation_activtation();
+			regionReservationLastUpdateTime = now;
+		}
+		return DBRegionReservationList;
+	}
+	
+	public List<FineDustVO> getDBFineDustList() {
+		long now = System.currentTimeMillis();
+		if(now > fineDustLastUpdateTime + FineDustLastUpdateCicle) {
+			DBFineDUstList = sqlSession.getMapper(FineDustDAO.class).select_fine_dust_activation();
+			regionReservationLastUpdateTime = now;
+		}
+		return DBFineDUstList;
+	}
+
+	public Map<String, DailyForecastModel> getDailyForecastTable() {
+		return DailyForecastTable;
+	}
+
+	public DailyForecastModel getDailyForecastModel(String key) {
+		return DailyForecastTable.get(key);
+	}
+
+	public Map<String, WeatherModel> getWeatherModelTable() {
+		return WeatherModelTable;
+	}
+
+	public WeatherModel getWeatherModel(String key) {
+		return WeatherModelTable.get(key);
+	}
+
+	public Map<Integer, WeatherVO> getDBWeatherTableMap() {
+		return DBWeatherTableMap;
+	}
+
+	public WeatherVO getDBWeatherTable(Integer code) {
+		return DBWeatherTableMap.get(code);
+	}
+
+	public List<WeatherVO> getDBWeatherVOList() {
+		return DBWeatherVOList;
+	}
+
+	public boolean isWeatherTableCreated() {
+		return isWeatherTableCreated;
+	}
+
+	public Map<String, Map<String, ArrayList<RegionTable>>> getDBWeatherRegionTable() {
+		return DBWeatherRegionTable;
+	}
+
+	public boolean isWeatherRegionCreated() {
+		return isWeatherRegionCreated;
+	}
+
+}

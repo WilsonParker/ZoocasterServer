@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.graction.lumi.dao.WeatherDAO">
+
+	<!-- UPDATE -->
+	<insert id="updateWeatehrDetail" parameterType="com.graction.lumi.model.db.param.ParamUpdateWeatherDetail">
+		call updateWeatherDetail(#{code}, #{idx}, #{names});
+	</insert>
+
+
+	<!-- SELECT -->
+	<select id="selectAllWeathers" resultType="com.graction.lumi.model.vo.WeatherVO">
+		SELECT
+			weather_code,
+			weather_name,
+			background.fileInformation_path as background_path,
+			background.fileInformation_name as background_name,
+			charact.fileInformation_path as character_path,
+			charact.fileInformation_name as character_name,
+			effect.fileInformation_path as effect_path,
+			effect.fileInformation_name as effect_name
+		FROM
+			Weather as weather
+			inner join FileInformation as background on
+			weather.weather_background_ref_file_index =
+			background.fileInformation_index
+			inner join FileInformation as charact on
+			weather.weather_character_ref_file_index =
+			charact.fileInformation_index
+			inner join FileInformation as effect on
+			weather.weather_effect_ref_file_index = effect.fileInformation_index
+		ORDER BY weather.weather_code;
+	</select>
+	
+	<select id="selectWeatherTable" resultType="com.graction.lumi.model.vo.WeatherVO" parameterType="int">
+		SELECT
+			weather_code,
+			weather_name,
+			background.fileInformation_index as background_index,
+			background.fileInformation_path as background_path,
+			background.fileInformation_name as background_name,
+			charact.fileInformation_index as character_index,
+			charact.fileInformation_path as character_path,
+			charact.fileInformation_name as character_name,
+			effect.fileInformation_index as effect_index,
+			effect.fileInformation_path as effect_path,
+			effect.fileInformation_name as effect_name
+		FROM
+			Weather as weather
+			inner join FileInformation as background on
+			weather.weather_background_ref_file_index =
+			background.fileInformation_index
+			inner join FileInformation as charact on
+			weather.weather_character_ref_file_index =
+			charact.fileInformation_index
+			inner join FileInformation as effect on
+			weather.weather_effect_ref_file_index = effect.fileInformation_index
+		WHERE
+			weather_code = #{code}
+		ORDER BY weather.weather_code;
+	</select>
+
+</mapper>

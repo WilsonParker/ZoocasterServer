@@ -1,0 +1,20 @@
+package com.graction.lumi.dao;
+
+import java.util.ArrayList;
+
+import com.graction.lumi.model.db.ParamFile;
+import com.graction.lumi.model.db.WeatherTable;
+
+public interface WeatherDAO {
+	
+	/*
+	 * UPDATE
+	 */
+	void updateWeatehrDetail(int code, ArrayList<ParamFile> list);
+	
+	
+	/*
+	 * SELECT
+	 */
+	ArrayList<WeatherTable> selectAllWeathers();
+}

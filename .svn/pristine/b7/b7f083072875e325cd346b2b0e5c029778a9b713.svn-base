@@ -1,0 +1,47 @@
+package com.graction.lumi.util.format;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/*
+ * Date 관련 Class
+ */
+public class DateManager {
+	private static final DateManager instance = new DateManager();
+	private SimpleDateFormat simpleDateFormat;
+	private final int DateLength = 13;
+
+	public static DateManager getInstance() {
+		return instance;
+	}
+
+	public DateManager() {
+		simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+	}
+
+	public String longToDate(String dateTime) {
+		System.out.println("dateTime : "+dateTime);
+		while (dateTime.length() < DateLength) dateTime += "0";
+		System.out.println("dateTime : "+dateTime);
+		return longToDate(Long.parseLong(dateTime));
+	}
+
+	public String longToDate(long dateTime) {
+		Date date = new Date(dateTime);
+		return simpleDateFormat.format(date.getTime());
+	}
+	
+	public long stringToTime(String date) throws ParseException {
+		return simpleDateFormat.parse(date.trim()).getTime();
+	}
+
+	public Timestamp stringToTimestamp(String date) throws ParseException {
+		return new Timestamp(stringToTime(date.trim()));
+	}
+	
+	public String timestampToString(Timestamp timestamp) throws ParseException {
+		return longToDate(timestamp.getTime());
+	}
+}

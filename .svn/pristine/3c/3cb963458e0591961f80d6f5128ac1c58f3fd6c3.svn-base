@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.graction.lumi.dao.RegionDAO">
+
+	<!--
+		################################################################# 
+		SELECT
+		################################################################# 
+	-->
+	<select id="select_all_region" resultType="com.graction.lumi.model.db.RegionTable">
+		SELECT
+			*
+		FROM
+			region
+	</select>
+	
+	<select id="select_all_region_reservation" resultType="com.graction.lumi.model.db.RegionReservationTable">
+		SELECT
+			*
+		FROM
+			RegionReservation
+	</select>
+	
+	<select id="select_region_reservation_detail" resultType="com.graction.lumi.model.vo.RegionReservationDataVO">
+		SELECT
+			*
+			, background.fileInformation_index as background_index
+			, background.fileInformation_path as background_path
+			, background.fileInformation_name as background_name
+			, charact.fileInformation_index as character_index
+			, charact.fileInformation_path as character_path
+			, charact.fileInformation_name as character_name
+			, effect.fileInformation_index as effect_index
+			, effect.fileInformation_path as effect_path
+			, effect.fileInformation_name as effect_name
+		FROM
+			RegionReservation as reservation
+			inner join FileInformation as background
+			on reservation.regionReservation_background_ref_file_index = background.fileInformation_index
+			inner join FileInformation as charact 
+			on reservation.regionReservation_character_ref_file_index = charact.fileInformation_index
+			inner join FileInformation as effect
+			on reservation.regionReservation_effect_ref_file_index = effect.fileInformation_index
+		where
+			regionReservation_index = #{idx}
+	</select>
+	
+	<!-- <select id="select_all_region2" resultType="com.graction.lumi.model.db.RegionTable">
+		SELECT
+		*
+		FROM
+		region
+		<choose>
+			<when test="region_SIDO != null">
+				WHERE region_SIDO = #{region_SIDO}
+			</when>
+			<when test="region_SI != null">
+				WHERE region_SI = #{region_SI}
+			</when>
+			<otherwise>
+				group by region_SIDO;
+			</otherwise>
+		</choose>
+	</select> -->
+	
+	<!-- <select id="select_region_reservation_activtation" resultType="com.graction.lumi.model.vo.RegionReservationDataVO">
+		SELECT 
+			*
+		    , (select fileInformation_path from FileInformation where fileInformation_index = reservation.regionReservation_background_ref_file_index)
+		    	as background_path
+		    , (select fileInformation_name from FileInformation where fileInformation_index = reservation.regionReservation_background_ref_file_index) 
+		    	as background_name 
+		    , (select fileInformation_path from FileInformation where fileInformation_index = reservation.regionReservation_character_ref_file_index)
+		    	as character_path
+		    , (select fileInformation_name from FileInformation where fileInformation_index = reservation.regionReservation_character_ref_file_index) 
+		    	as character_name 
+		    , (select fileInformation_path from FileInformation where fileInformation_index = reservation.regionReservation_effect_ref_file_index)
+		    	as effect_path
+		    , (select fileInformation_name from FileInformation where fileInformation_index = reservation.regionReservation_effect_ref_file_index) 
+		    	as effect_name 
+	    FROM 
+			RegionReservation as reservation;
+		WHERE
+			regionReservation_state = 'ACTIVATION'
+	</select> -->
+	
+	<select id="select_region_reservation_activtation" resultType="com.graction.lumi.model.vo.RegionReservationDataVO">
+		SELECT
+			*
+			, background.fileInformation_index as background_index
+			, background.fileInformation_path as background_path
+			, background.fileInformation_name as background_name
+			, charact.fileInformation_index as character_index
+			, charact.fileInformation_path as character_path
+			, charact.fileInformation_name as character_name
+			, effect.fileInformation_index as effect_index
+			, effect.fileInformation_path as effect_path
+			, effect.fileInformation_name as effect_name
+		FROM
+			RegionReservation as reservation
+			inner join FileInformation as background
+			on reservation.regionReservation_background_ref_file_index = background.fileInformation_index
+			inner join FileInformation as charact 
+			on reservation.regionReservation_character_ref_file_index = charact.fileInformation_index
+			inner join FileInformation as effect
+			on reservation.regionReservation_effect_ref_file_index = effect.fileInformation_index
+		WHERE
+			regionReservation_state = 'ACTIVATION'
+		;
+	</select>
+	
+	
+	<!--
+		################################################################# 
+		INSERT
+		################################################################# 
+	-->
+	<insert id="insert_file_information" parameterType="com.graction.lumi.model.db.FileInformationTable"> 
+		INSERT INTO 
+			FileInformation
+			(
+				fileInformation_path,
+				fileInformation_name
+			) 
+		VALUES(
+			#{fileInformation_path},
+			#{fileInformation_name}
+		) 
+		<selectKey keyProperty="fileInformation_index" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey> 
+	</insert>
+
+	<insert id="insert_region_reversation" parameterType="com.graction.lumi.model.db.RegionReservationTable"> 
+		INSERT INTO 
+			RegionReservation
+		VALUES(
+			default,
+			#{regionReservation_region},
+			#{regionReservation_prioritization},
+			#{regionReservation_set_time},
+			#{regionReservation_active_time},
+			#{regionReservation_end_time},
+			default,
+			#{regionReservation_background_ref_file_index},
+			#{regionReservation_character_ref_file_index},
+			#{regionReservation_effect_ref_file_index}
+		) 
+		<selectKey keyProperty="regionReservation_index" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+	</insert>
+	
+</mapper>

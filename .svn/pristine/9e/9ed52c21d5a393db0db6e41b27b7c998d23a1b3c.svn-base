@@ -1,0 +1,46 @@
+var nowLocation;
+var nowDebug = true;
+
+function log(msg) {
+	if(nowDebug)
+		console.log(msg);
+};
+
+function movePage(page) {
+	nowLocation = page;
+	$.ajax({
+		url : page,
+		success : function(result){
+			$("#content").html(result);
+		}
+	})
+};
+
+function moveLocation(page) {
+	window.location.href = page;
+};
+
+function reload(){
+	movePage(nowLocation);
+};
+
+
+
+
+
+
+/*
+ * ############################################################################################################################################
+ */
+
+
+// input type="file" 에 upload 한 이미지를 미리 보기 할 수 있다
+function readURL(input) {
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+            $("img[name='"+input.name+"']").attr('src', e.target.result);
+        }
+      reader.readAsDataURL(input.files[0]);
+    }
+}

@@ -1,0 +1,143 @@
+package com.graction.lumi.controller;
+
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.google.gson.Gson;
+import com.graction.lumi.data.DataStorage.Mapping;
+import com.graction.lumi.data.DataStorage.Server;
+import com.graction.lumi.data.DataTableManager;
+import com.graction.lumi.model.request.WeatherRequestModel;
+import com.graction.lumi.model.response.DailyForecastModel;
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.net.Net;
+import com.graction.lumi.util.WriteManager;
+import com.graction.lumi.util.log.HLogger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+@RequestMapping(Mapping.MAPPING_ROOT_APP)
+public class AppController {
+
+	private static final HLogger logger = new HLogger(AppController.class);
+	private boolean isComplete = false;
+	private String lat, lon;
+
+	private DailyForecastModel dailyForecastModel;
+	private WeatherModel weatherModel;
+	private StringBuilder builder;
+	private DataTableManager dataTableManager = DataTableManager.getInstance();
+
+	@RequestMapping(value = Mapping.MAPPING_INDEX, method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		return "home";
+	}
+
+	// 16 day forecast
+	@RequestMapping(value = Mapping.MAPPING_DAILYFORECAST, method = RequestMethod.GET)
+	public void dailyforecast(HttpServletRequest httpServlerRequest,
+			final HttpServletResponse httpServletResponse) {
+		lat = httpServlerRequest.getParameter(Server.PARAM_LAT);
+		lon = httpServlerRequest.getParameter(Server.PARAM_LON);
+		builder = new StringBuilder();
+		isComplete = false;
+		Net.getInstance().getFactoryIm().selectForecastDaily(new WeatherRequestModel(lat, lon).getMap())
+				.enqueue(new Callback<DailyForecastModel>() {
+
+					@Override
+					public void onResponse(Call<DailyForecastModel> call, Response<DailyForecastModel> response) {
+						if (response.isSuccessful()) {
+							dailyForecastModel = response.body();
+							try {
+								builder.append(new Gson().toJson(dailyForecastModel));
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								logger.log(HLogger.LogType.ERROR,
+										"onResponse(Call<DailyForecast> call, Response<DailyForecast> response)",
+										"Retrofit Error : ", e);
+								e.printStackTrace();
+							}
+						} else {
+							logger.log(HLogger.LogType.WARN,
+									"onResponse(Call<DailyForecast> call, Response<DailyForecast> response)",
+									"warn is not successful");
+						}
+						isComplete = true;
+					}
+
+					@Override
+					public void onFailure(Call<DailyForecastModel> call, Throwable t) {
+						logger.log(HLogger.LogType.ERROR, "onFailure(Call<DailyForecast> call, Throwable t)",
+								"error is not successful", t);
+						isComplete = true;
+					}
+				});
+
+		try {
+			while (!isComplete)
+				Thread.sleep(500);
+			WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(dailyForecastModel));
+		} catch (Exception e) {
+			logger.log(HLogger.LogType.ERROR, "Exception", "Thread sleep Exception", e);
+			e.printStackTrace();
+		}
+	}
+
+	// Current weather
+	@RequestMapping(value = Mapping.MAPPING_WEATHER, method = RequestMethod.GET)
+	public void weather(HttpServletRequest httpServlerRequest,
+			final HttpServletResponse httpServletResponse) {
+		lat = httpServlerRequest.getParameter(Server.PARAM_LAT);
+		lon = httpServlerRequest.getParameter(Server.PARAM_LON);
+		builder = new StringBuilder();
+		isComplete = false;
+		if ((weatherModel = dataTableManager.getWeatherModel(lat + Server.KEY_LATLNG_SPLIT + lon)) != null) {
+			isComplete = true;
+		} else {
+			Net.getInstance().getFactoryIm().selectWeather(new WeatherRequestModel(lat, lon).getMap())
+					.enqueue(new Callback<WeatherModel>() {
+
+						@Override
+						public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+							if (response.isSuccessful()) {
+								weatherModel = response.body();
+								weatherModel = dataTableManager.insertWeatherData(lat, lon, weatherModel);
+							} else {
+								logger.log(HLogger.LogType.WARN,
+										"onResponse(Call<WeatherModel> call, Response<WeatherModel> response)",
+										"warn is not successful");
+							}
+							isComplete = true;
+						}
+
+						@Override
+						public void onFailure(Call<WeatherModel> call, Throwable t) {
+							logger.log(HLogger.LogType.ERROR, "onFailure(Call<WeatherModel> call, Throwable t)",
+									"error is not successful", t);
+							isComplete = true;
+						}
+					});
+		}
+		try {
+			while (!isComplete)
+				Thread.sleep(500);
+			WriteManager.getInstance().write(httpServletResponse, new Gson().toJson(weatherModel));
+		} catch (Exception e) {
+			logger.log(HLogger.LogType.ERROR, "Exception", "Thread sleep Exception", e);
+			e.printStackTrace();
+		}
+	}
+}

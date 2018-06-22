@@ -1,0 +1,131 @@
+<%@ page import="com.graction.lumi.util.format.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.util.stream.Stream"%>
+<%@ page import="com.graction.lumi.data.*"%>
+<%@ page import="com.graction.lumi.data.DataStorage.*"%>
+<%@ page import="com.graction.lumi.model.response.*"%>
+<%@ page import="com.graction.lumi.model.vo.FineDustVO"%>
+<%
+	FineDustVO vo = (FineDustVO) request.getAttribute(DataStorage.Attribute.ATTR_FINE_DUST_VO);
+%>
+<style>
+td img {
+	width: 45%;
+	min-width: 350px;
+}
+</style>
+
+<h1>Fine Dust Information</h1>
+<hr>
+
+<div class="card mb-3">
+	<div class="card-header">
+		<i class="fa fa-table"></i> Fine Dust Information
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<form id="frm" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="<%=DataStorage.Param.PARAM_FINE_DUST_INDEX%>" value="<%=vo.getFineDust_index()%>"/>
+				
+				<table class="table table-bordered dataTable " width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_GRADE%></td>
+					<td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_GRADE%>" value="<%=vo.getFineDust_grade()%>"/></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MIN%></td>
+					<td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_MIN%>" value="<%=vo.getFineDust_min()%>"/></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MAX%></td>
+					<td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_MAX%>" value="<%=vo.getFineDust_max()%>"/></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_BACKGROUND_PATH%></td>
+					<td><%=vo.getBackground_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_BACKGROUND_NAME%></td>
+					<td><%=vo.getBackground_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_BACKGROUND%>"/>
+					</td>
+					<td>
+						<img class="img-thumbnail" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getBackground_path() + vo.getBackground_name()%>" />	
+					</td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_CHARACTER_PATH%></td>
+					<td><%=vo.getCharacter_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_CHARACTER_NAME%></td>
+					<td><%=vo.getCharacter_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_CHARACTER%>">
+					</td>
+					<td>
+						<img class="img-thumbnail" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getCharacter_path() + vo.getCharacter_name()%>" />	
+					</td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_EFFECT_PATH%></td>
+					<td><%=vo.getEffect_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_EFFECT_NAME%></td>
+					<td><%=vo.getEffect_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_EFFECT%>" />
+					</td>
+					<td>
+						<img class="img-thumbnail" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getEffect_path() + vo.getEffect_name()%>" />
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<button type="button" class="btn btn-warning btn-circle btn-lg" onclick="javascript:window.history.back();"><i class="fa fa-times"></i> </button>
+		<button type="button" class="btn btn-info btn-circle btn-lg" onclick="submit()"><i class="fa fa-check"></i> </button>
+	</div>
+</div>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>jquery-3.2.1.min.js"></script>
+<script>
+	function submit(){
+		var frmData = new FormData(document.getElementById('frm'));
+		log(frmData);
+		$.ajax({
+			url : "<%=request.getContextPath()+Mapping.MAPPING_FINE_DUST_MODIFY%>",
+			type : "POST",
+			processData: false,
+            contentType: false,
+			data : frmData,
+			success : function(result){
+				log(result+"");
+				switch(result){
+				case "<%=Code.CODE_SUCCESS%>" :
+					log("success");
+					alert("<%=Message.FINE_DUST_DETAIL_SUCCESS_MESSAGE%>");
+					location.reload();
+					break;
+				case "<%=Code.CODE_FAIL%>" :
+					log("fail");
+					alert("<%=Message.FINE_DUST_DETAIL_FAIL_MESSAGE%>");
+					break;
+				}
+			},
+			error : function(xhr, status, error){
+				log(error);
+			}
+		});
+	}
+</script>

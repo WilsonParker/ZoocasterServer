@@ -1,0 +1,189 @@
+package com.graction.lumi.model.vo;
+
+import java.sql.Timestamp;
+
+import com.graction.lumi.model.ImageFrame;
+
+public class RegionReservationVO implements ImageFrame{
+	private int regionReservation_index
+				, regionReservation_background_ref_file_index
+				, regionReservation_character_ref_file_index
+				, regionReservation_effect_ref_file_index;
+	private String regionReservation_state
+					, regionReservation_region
+					, regionReservation_prioritization
+					, background_img_path
+					, background_img_name
+					, character_img_path
+					, character_img_name
+					, effect_img_path
+					, effect_img_name
+					
+					
+					;
+	private Timestamp regionReservation_set_time
+					, regionReservation_active_time
+					, regionReservation_end_time;
+
+	public RegionReservationVO() {
+		
+	}
+	
+	public RegionReservationVO(int regionReservation_background_ref_file_index,
+			int regionReservation_character_ref_file_index, int regionReservation_effect_ref_file_index,
+			String regionReservation_region, String regionReservation_prioritization, Timestamp regionReservation_set_time,
+			Timestamp regionReservation_active_time, Timestamp regionReservation_end_time) {
+		this.regionReservation_background_ref_file_index = regionReservation_background_ref_file_index;
+		this.regionReservation_character_ref_file_index = regionReservation_character_ref_file_index;
+		this.regionReservation_effect_ref_file_index = regionReservation_effect_ref_file_index;
+		this.regionReservation_region = regionReservation_region;
+		this.regionReservation_prioritization = regionReservation_prioritization;
+		this.regionReservation_set_time = regionReservation_set_time;
+		this.regionReservation_active_time = regionReservation_active_time;
+		this.regionReservation_end_time = regionReservation_end_time;
+	}
+
+	public int getRegionReservation_index() {
+		return regionReservation_index;
+	}
+
+	public void setRegionReservation_index(int regionReservation_index) {
+		this.regionReservation_index = regionReservation_index;
+	}
+
+	public int getRegionReservation_background_ref_file_index() {
+		return regionReservation_background_ref_file_index;
+	}
+
+	public void setRegionReservation_background_ref_file_index(int regionReservation_background_ref_file_index) {
+		this.regionReservation_background_ref_file_index = regionReservation_background_ref_file_index;
+	}
+
+	public int getRegionReservation_character_ref_file_index() {
+		return regionReservation_character_ref_file_index;
+	}
+
+	public void setRegionReservation_character_ref_file_index(int regionReservation_character_ref_file_index) {
+		this.regionReservation_character_ref_file_index = regionReservation_character_ref_file_index;
+	}
+
+	public int getRegionReservation_effect_ref_file_index() {
+		return regionReservation_effect_ref_file_index;
+	}
+
+	public void setRegionReservation_effect_ref_file_index(int regionReservation_effect_ref_file_index) {
+		this.regionReservation_effect_ref_file_index = regionReservation_effect_ref_file_index;
+	}
+
+	public String getRegionReservation_state() {
+		return regionReservation_state;
+	}
+
+	public void setRegionReservation_state(String regionReservation_state) {
+		this.regionReservation_state = regionReservation_state;
+	}
+
+	public String getRegionReservation_region() {
+		return regionReservation_region;
+	}
+
+	public void setRegionReservation_region(String regionReservation_region) {
+		this.regionReservation_region = regionReservation_region;
+	}
+
+	public String getRegionReservation_prioritization() {
+		return regionReservation_prioritization;
+	}
+
+	public void setRegionReservation_prioritization(String regionReservation_prioritization) {
+		this.regionReservation_prioritization = regionReservation_prioritization;
+	}
+
+	public String getBackground_img_path() {
+		return background_img_path;
+	}
+
+	public void setBackground_img_path(String background_img_path) {
+		this.background_img_path = background_img_path;
+	}
+
+	public String getBackground_img_name() {
+		return background_img_name;
+	}
+
+	public void setBackground_img_name(String background_img_name) {
+		this.background_img_name = background_img_name;
+	}
+
+	public String getCharacter_img_path() {
+		return character_img_path;
+	}
+
+	public void setCharacter_img_path(String character_img_path) {
+		this.character_img_path = character_img_path;
+	}
+
+	public String getCharacter_img_name() {
+		return character_img_name;
+	}
+
+	public void setCharacter_img_name(String character_img_name) {
+		this.character_img_name = character_img_name;
+	}
+
+	public String getEffect_img_path() {
+		return effect_img_path;
+	}
+
+	public void setEffect_img_path(String effect_img_path) {
+		this.effect_img_path = effect_img_path;
+	}
+
+	public String getEffect_img_name() {
+		return effect_img_name;
+	}
+
+	public void setEffect_img_name(String effect_img_name) {
+		this.effect_img_name = effect_img_name;
+	}
+
+	public Timestamp getRegionReservation_set_time() {
+		return regionReservation_set_time;
+	}
+
+	public void setRegionReservation_set_time(Timestamp regionReservation_set_time) {
+		this.regionReservation_set_time = regionReservation_set_time;
+	}
+
+	public Timestamp getRegionReservation_active_time() {
+		return regionReservation_active_time;
+	}
+
+	public void setRegionReservation_active_time(Timestamp regionReservation_active_time) {
+		this.regionReservation_active_time = regionReservation_active_time;
+	}
+
+	public Timestamp getRegionReservation_end_time() {
+		return regionReservation_end_time;
+	}
+
+	public void setRegionReservation_end_time(Timestamp regionReservation_end_time) {
+		this.regionReservation_end_time = regionReservation_end_time;
+	}
+
+	@Override
+	public String toString() {
+		return "RegionReservationVO [regionReservation_index=" + regionReservation_index
+				+ ", regionReservation_background_ref_file_index=" + regionReservation_background_ref_file_index
+				+ ", regionReservation_character_ref_file_index=" + regionReservation_character_ref_file_index
+				+ ", regionReservation_effect_ref_file_index=" + regionReservation_effect_ref_file_index
+				+ ", regionReservation_state=" + regionReservation_state + ", regionReservation_region="
+				+ regionReservation_region + ", regionReservation_prioritization=" + regionReservation_prioritization
+				+ ", background_img_path=" + background_img_path + ", background_img_name=" + background_img_name
+				+ ", character_img_path=" + character_img_path + ", character_img_name=" + character_img_name
+				+ ", effect_img_path=" + effect_img_path + ", effect_img_name=" + effect_img_name
+				+ ", regionReservation_set_time=" + regionReservation_set_time + ", regionReservation_active_time="
+				+ regionReservation_active_time + ", regionReservation_end_time=" + regionReservation_end_time + "]";
+	}
+
+}

@@ -1,0 +1,73 @@
+package com.graction.lumi.data;
+
+import com.graction.lumi.model.xml.WeatherData;
+
+public class DataStorage {
+	public static String Path_Directory;
+	public static WeatherData weatherData;
+	
+	public class Server{
+		public static final String SERVER_URL = "http://localhost:8101/lumi"
+									, PACKAGE_NAME = "/lumi"
+									, KEY_LATLNG_SPLIT = ":"
+				
+									, PARAM_LAT = "lat"
+									, PARAM_LON = "lon"
+									;
+	}
+	
+	public class Mapping{
+		public static final String MAPPING_INDEX= "/"
+									, MAPPING_HOME= "/home"
+									, MAPPING_ATTRIBUTE= "/attribute"
+									, MAPPING_DAILYFORECAST= "/dailyforecast"
+									, MAPPING_WEATHER= "/weather"
+									
+									, MAPPING_ROOT_APP= "/app"
+									;
+	}
+	
+	public class Key{
+		public static final String KEY_RESOURCES = "resources"
+									, KEY_DATA = "data"
+									, KEY_XML = "xml"
+									, KEY_BOOTSTRAP = "bootstrap"
+									, KEY_CSS = "css"
+									, KEY_JS = "js"
+									;
+	}
+	public class Path{
+									// path of folder or files
+		public static final String PATH_RESOURCES = "/" + Key.KEY_RESOURCES + "/" 
+//									PATH_RESOURCES = Server.PAKAGE_NAME + "/" + Key.KEY_RESOURCES + "/"
+									, PATH_DIR_DATA = PATH_RESOURCES + Key.KEY_DATA + "/"
+									, PATH_DIR_XML = PATH_DIR_DATA+ "/" + Key.KEY_XML + "/"
+									
+									, PATH_DIR_BOOTSTRAP = Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_BOOTSTRAP + "/"
+									, PATH_DIR_CSS = Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_CSS + "/"
+									, PATH_DIR_JS= Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_JS + "/"
+									
+									// jsp folder
+									, PATH_VIEW_DIR_HOME = "home/"
+									
+									// path of jsp
+									, PATH_VIEW_FRAME = PATH_VIEW_DIR_HOME+ "/" + File.VIEW_FRAME
+									, PATH_VIEW_HOME = PATH_VIEW_DIR_HOME+ "/" + File.VIEW_HOME
+									, PATH_VIEW_ATTRIBUTE = PATH_VIEW_DIR_HOME+ "/" + File.VIEW_ATTRIBUTE
+									
+									;
+	}
+	
+	public class File{
+									// file
+		public static final String FILE_NAME_XML_WEATHERDATA = "WeatherData.xml"
+									, FILE_NAME_JS_COMMONSCRIPT= "commonScript.js"
+				
+									// jsp
+									, VIEW_FRAME = "frame"
+									, VIEW_HOME= "home"
+									, VIEW_ATTRIBUTE= "attribute"
+									;
+		
+	}
+}

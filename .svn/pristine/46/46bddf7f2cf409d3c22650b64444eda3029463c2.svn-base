@@ -1,0 +1,123 @@
+package test;
+
+import java.io.UnsupportedEncodingException;
+
+import org.junit.Test;
+
+import com.graction.lumi.model.request.LatLonRequestModel;
+import com.graction.lumi.model.response.IntegratedAirQualityModel;
+import com.graction.lumi.net.CustomIntercepter;
+import com.graction.lumi.net.Net;
+import com.graction.lumi.net.OpenDataFactoryIm;
+import com.graction.lumi.util.gps.AddressManager;
+import com.graction.lumi.util.gps.GoogleGeoManager;
+import com.graction.lumi.util.parser.LenientGsonConverterFactory;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+public class TestRetrofit {
+
+	@Test
+	public void test() {
+//		fail("Not yet implemented");
+		test1();
+	}
+
+	private void test1() {
+		String addr = GoogleGeoManager.getInstance().getAddress("37.566535", "126.97796919999996");
+		String[] address = AddressManager.getInstance().extractAddress(addr);
+		System.out.println(addr);
+		System.out.println(address[0]);
+		System.out.println(address[1]);
+		System.out.println(address[2]);
+		try {
+			Net.getInstance().getOpenDataRetrofit().selectIntegratedAirQuality(new LatLonRequestModel(address[2]).getMap())
+					.enqueue(new Callback<IntegratedAirQualityModel>() {
+
+						@Override
+						public void onResponse(Call<IntegratedAirQualityModel> call,
+								Response<IntegratedAirQualityModel> response) {
+							if (response.isSuccessful()) {
+								System.out.println("body : " + response.body());
+							}
+						}
+
+						@Override
+						public void onFailure(Call<IntegratedAirQualityModel> call, Throwable t) {
+							System.out.println("error : " + t.getMessage());
+						}
+					});
+			Thread.sleep(1000);
+		} catch (UnsupportedEncodingException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void test2() {
+		System.out.println("test2");
+		try {
+			new Retrofit.Builder()
+			.baseUrl("http://openapi.airkorea.or.kr/")
+			.addConverterFactory(LenientGsonConverterFactory.create())
+			// .addConverterFactory(GsonConverterFactory.create())
+			.client(createClient())
+			.build().create(OpenDataFactoryIm.class)
+			.selectIntegratedAirQuality(new LatLonRequestModel("종로구").getMap()) .enqueue(new Callback<IntegratedAirQualityModel>() {
+
+						@Override
+						public void onResponse(Call<IntegratedAirQualityModel> call, Response<IntegratedAirQualityModel> response) {
+							if (response.isSuccessful()) {
+								System.out.println("body : "+response.body());
+							}
+							System.out.println("not success : "+response.body());
+						}
+
+						@Override
+						public void onFailure(Call<IntegratedAirQualityModel> call, Throwable t) {
+							System.out.println("error : "+t.getMessage());
+						}
+					});
+			Thread.sleep(1000);
+		} catch (UnsupportedEncodingException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void test3() {
+		try {
+			Net.getInstance().getOpenDataRetrofit().selectIntegratedAirQuality(new LatLonRequestModel("종로구").getMap())
+					.enqueue(new Callback<IntegratedAirQualityModel>() {
+
+						@Override
+						public void onResponse(Call<IntegratedAirQualityModel> call,
+								Response<IntegratedAirQualityModel> response) {
+							if (response.isSuccessful()) {
+								System.out.println("body : " + response.body());
+							}
+							System.out.println("not success : " + response.body());
+						}
+
+						@Override
+						public void onFailure(Call<IntegratedAirQualityModel> call, Throwable t) {
+							System.out.println("error : " + t.getMessage());
+						}
+					});
+			Thread.sleep(1000);
+		} catch (UnsupportedEncodingException |
+
+				InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private OkHttpClient createClient() {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(new CustomIntercepter());
+        return okHttpClientBuilder.build();
+	}
+}

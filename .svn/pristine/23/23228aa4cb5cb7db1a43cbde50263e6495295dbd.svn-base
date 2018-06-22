@@ -1,0 +1,63 @@
+package com.graction.lumi.util;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class DataProvideManager{
+	private Execution execution;
+	private Complete complete;
+	private List<Execution> executionList = new ArrayList<Execution>();
+	private Iterator<Execution> iterator;
+	private static final int DEFAULT_CYCLE = 200;
+	private boolean isProceeding = true;
+	private int proceedCycle;
+	
+	public DataProvideManager(Execution execution, Complete complete, int proceedCycle) {
+//		this.execution = execution;
+		this.complete = complete;
+		this.proceedCycle = proceedCycle;
+		executionList.add(execution);
+		iterator = executionList.iterator();
+		nextExecution();
+	}
+	
+	public DataProvideManager(Execution execution, Complete complete) {
+		this(execution, complete, DEFAULT_CYCLE);
+	}
+	
+	public void addExecution(Execution execution) {
+		executionList.add(execution);
+	}
+
+	public void execution() throws InterruptedException {
+		execution.excution();
+		proceeding();
+	}
+
+	public void nextExecution() {
+		if(iterator.hasNext()) {
+			execution = iterator.next();
+			execution.excution();
+		}else
+			complete.complete();
+	}
+	
+	
+	public void complete() {
+		isProceeding = false;
+		complete.complete();
+	}
+	
+	private void proceeding() throws InterruptedException{
+		while(isProceeding)
+			Thread.sleep(proceedCycle);
+	}
+	
+	public interface Execution{
+		public void excution();
+	}
+	public interface Complete{
+		public void complete();
+	}
+}

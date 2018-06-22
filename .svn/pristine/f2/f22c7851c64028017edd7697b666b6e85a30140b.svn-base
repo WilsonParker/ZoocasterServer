@@ -1,0 +1,37 @@
+package com.graction.lumi.data;
+
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.function.ToIntFunction;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.graction.lumi.data.DataStorage.Param;
+import com.graction.lumi.model.db.RegionReservationTable2;
+import com.graction.lumi.util.StringUtil;
+import com.graction.lumi.util.file.FileManager;
+import com.graction.lumi.util.format.DateManager;
+
+public class RequestToModelManager {
+	private static final RequestToModelManager instance = new RequestToModelManager();
+	
+	public static RequestToModelManager getInstance() {
+		return instance;
+	}
+
+	public RegionReservationTable2 requestRegionReservationTable(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+		DateManager dateManager = DateManager.getInstance();
+		int idx = Integer.parseInt(request.getParameter(Param.PARAM_INDEX));
+		String region = StringUtil.requestParamEncoding(request.getParameter(Param.PARAM_REGION));
+		String fileInfo = FileManager.getInstance().reigonAddUpload(request, response);
+		String[] times = request.getParameter(Param.PARAM_TIME).split("-");
+		int[] img_index = Arrays.stream(fileInfo.split(",")).mapToInt(new ToIntFunction<String>() {
+			public int applyAsInt(String value) {
+				return Integer.parseInt(value);
+			};
+		}).toArray();
+//		return new RegionReservationTable(idx, img_index[0],img_index[1],img_index[2],region, request.getParameter(Param.PARAM_PRIORITIZATION), new Timestamp(System.currentTimeMillis()), dateManager.stringToTimestamp(times[0]), dateManager.stringToTimestamp(times[1]));
+		return new RegionReservationTable2(idx, img_index[0],img_index[1],img_index[2],region, request.getParameter(Param.PARAM_PRIORITIZATION), dateManager.longToDate(System.currentTimeMillis()), times[0], times[1]);
+	}
+}

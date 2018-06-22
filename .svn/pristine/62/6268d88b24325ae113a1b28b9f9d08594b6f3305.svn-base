@@ -1,0 +1,11 @@
+package com.graction.lumi.util;
+
+public class StringUtil {
+	
+	public static String getDefaultString(String s, String def) {
+		if(s.equals(""))
+			return def;
+		else
+			return s;
+	}
+}

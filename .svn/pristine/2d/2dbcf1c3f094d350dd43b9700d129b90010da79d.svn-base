@@ -1,0 +1,46 @@
+package com.graction.lumi.model.data.station;
+
+import java.util.List;
+
+public class StationModel {
+	private List<StationItem> list;
+
+	public List<StationItem> getList() {
+		return list;
+	}
+
+	public void setList(List<StationItem> list) {
+		this.list = list;
+	}
+
+	@Override
+	public String toString() {
+		return "StationModel [list=" + list + "]";
+	}
+
+	public class StationItem {
+		private String key, value;
+
+		public String getKey() {
+			return key;
+		}
+
+		public void setKey(String key) {
+			this.key = key;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return "StationItem [key=" + key + ", value=" + value + "]";
+		}
+
+	}
+}

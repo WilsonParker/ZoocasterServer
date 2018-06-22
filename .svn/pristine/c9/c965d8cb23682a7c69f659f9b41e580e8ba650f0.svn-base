@@ -1,0 +1,96 @@
+package com.graction.lumi.model.location;
+
+import java.util.ArrayList;
+
+
+public class GoogleLocationModel {
+	private ArrayList<GoogleLocationItem> results;
+	private String status;
+
+	public ArrayList<GoogleLocationItem> getResults() {
+		return results;
+	}
+
+
+	public void setResults(ArrayList<GoogleLocationItem> results) {
+		this.results = results;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("GoogleLocationModel [results=[");
+		for(GoogleLocationItem item : results)
+			builder.append(item.toString()+",");
+		builder.append("], status=" + status + "]");
+		return builder.toString();
+	}
+
+	public class GoogleLocationItem {
+		private ArrayList<ItemComponent> address_components;
+		private String formatted_address; 
+
+		public ArrayList<ItemComponent> getAddress_components() {
+			return address_components;
+		}
+
+
+		public void setAddress_components(ArrayList<ItemComponent> address_components) {
+			this.address_components = address_components;
+		}
+
+
+		public String getFormatted_address() {
+			return formatted_address;
+		}
+
+
+		public void setFormatted_address(String formatted_address) {
+			this.formatted_address = formatted_address;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder("GoogleLocationItem [address_components=[");
+			for(ItemComponent component : address_components)
+				builder.append(component.toString()+",");
+			builder.append("], formatted_address="+formatted_address + "]");
+			return builder.toString();
+		}
+
+		public class ItemComponent {
+			private String long_name
+							, short_name;
+
+			public String getLong_name() {
+				return long_name;
+			}
+
+			public void setLong_name(String long_name) {
+				this.long_name = long_name;
+			}
+
+			public String getShort_name() {
+				return short_name;
+			}
+
+			public void setShort_name(String short_name) {
+				this.short_name = short_name;
+			}
+
+			@Override
+			public String toString() {
+				return "ItemComponent [long_name=" + long_name + ", short_name=" + short_name + "]";
+			}
+		}
+	}
+}

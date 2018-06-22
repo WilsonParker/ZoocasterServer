@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weatherData>
+		<!-- Group 2xx: Thunderstorm -->
+		<weather id=" 200" message="thunderstorm with light rain" />
+		<weather id=" 201" message="thunderstorm with rain" />
+		<weather id=" 202" message="thunderstorm with heavy rain" />
+		<weather id=" 210" message="light thunderstorm" />
+</weatherData>

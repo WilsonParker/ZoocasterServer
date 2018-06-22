@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.graction.lumi.dao.RegionDAO">
+
+	<!--
+		################################################################# 
+		SELECT
+		################################################################# 
+	-->
+	<select id="select_all_region" resultType="com.graction.lumi.model.db.RegionTable">
+		SELECT
+			*
+		FROM
+			region
+	</select>
+	
+	<select id="select_all_region_reservation" resultType="com.graction.lumi.model.db.RegionReservationTable">
+		SELECT
+			*
+		FROM
+			RegionReservation
+	</select>
+	
+	<select id="select_region_reservation_activtation" resultType="com.graction.lumi.model.db.RegionReservationTable">
+		SELECT
+			*
+		FROM
+			RegionReservation
+		WHERE
+			regionReservation_state = 'ACTIVATION'
+	</select>
+	<!-- <select id="select_all_region2" resultType="com.graction.lumi.model.db.RegionTable">
+		SELECT
+		*
+		FROM
+		region
+		<choose>
+			<when test="region_SIDO != null">
+				WHERE region_SIDO = #{region_SIDO}
+			</when>
+			<when test="region_SI != null">
+				WHERE region_SI = #{region_SI}
+			</when>
+			<otherwise>
+				group by region_SIDO;
+			</otherwise>
+		</choose>
+	</select> -->
+	
+	<!--
+		################################################################# 
+		INSERT
+		################################################################# 
+	-->
+	<insert id="insert_file_information" parameterType="com.graction.lumi.model.db.FileInformationTable"> 
+		INSERT INTO 
+			FileInformation
+			(
+				fileInformation_path,
+				fileInformation_name
+			) 
+		VALUES(
+			#{fileInformation_path},
+			#{fileInformation_name}
+		) 
+		<selectKey keyProperty="fileInformation_index" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey> 
+	</insert>
+
+	<insert id="insert_region_reversation" parameterType="com.graction.lumi.model.db.RegionReservationTable"> 
+		INSERT INTO 
+			RegionReservation
+		VALUES(
+			default,
+			#{regionReservation_region},
+			#{regionReservation_prioritization},
+			#{regionReservation_set_time},
+			#{regionReservation_active_time},
+			#{regionReservation_end_time},
+			default,
+			#{regionReservation_background_ref_file_index},
+			#{regionReservation_character_ref_file_index},
+			#{regionReservation_effect_ref_file_index}
+		) 
+		<selectKey keyProperty="regionReservation_index" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+	</insert>
+	
+</mapper>

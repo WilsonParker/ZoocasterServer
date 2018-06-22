@@ -1,0 +1,124 @@
+package com.graction.lumi.data;
+
+import com.graction.lumi.model.xml.address.AddressData;
+import com.graction.lumi.model.xml.weather.WeatherData;
+
+public class DataStorage {
+	public static String Path_Directory;
+	public static WeatherData weatherData;
+	public static AddressData addressData;
+	
+	public class Server{
+		public static final String SERVER_URL = "http://localhost:8101/lumi"
+									, PACKAGE_NAME = "/lumi"
+									, PACKAGE_NAME_ONLY = "Lumi"
+									, ENCODING = "UTF-8"
+									
+									, KEY_LATLNG_SPLIT = ":"
+				
+									, PARAM_LAT = "lat"
+									, PARAM_LON = "lon"
+									
+									;
+	}
+	
+	public class Mapping{
+		public static final String MAPPING_INDEX= "/"
+									, MAPPING_HOME= "/home"
+//									, MAPPING_ATTRIBUTE= "/attribute"
+									, MAPPING_STYLE= "/style"
+									, MAPPING_SCRIPT= "/script"
+									, MAPPING_DAILYFORECAST= "/dailyforecast"
+									, MAPPING_WEATHER= "/weather"
+									
+									, MAPPING_MANAGE_WEATHER= "/manage_weather"
+									
+									, MAPPING_WEATHER_ID_CHANGE= "/weatherChnage"
+									, MAPPING_UPLOAD_IMAGES= "/uploadImages"
+									
+									, MAPPING_ROOT_APP= "/app"
+									;
+	}
+	
+	public class Attribute{
+		public static final String A= "/"
+									, ATTR_REQUEST = "request"
+									, ATTR_RESPONSE = "response"
+									, ATTR_DAO_MAPPER = "daoMapper"
+									, ATTR_SQLSESSION= "sqlSession"
+									;
+	}
+	
+	public class Key{
+		public static final String KEY_RESOURCES = "resources"
+									, KEY_DATA = "data"
+									, KEY_XML = "xml"
+									, KEY_BOOTSTRAP = "bootstrap"
+									, KEY_CSS = "css"
+									, KEY_JS = "js"
+									
+									, KEY_ASSETS = "assets"
+									, KEY_IMAGES = "images"
+									, KEY_BACKGROUND = "background"
+									, KEY_CHARACTER = "character"
+									, KEY_EFFECT = "effect"
+									
+									, KEY_WEATHER_ID = "weather_id"
+									, KEY_WEATHER_KEY = "weather_key"
+									
+									;
+	}
+	public class Path{
+									// path of folder or files
+		public static final String PATH_RESOURCES = "/" + Key.KEY_RESOURCES + "/" 
+//									PATH_RESOURCES = Server.PAKAGE_NAME + "/" + Key.KEY_RESOURCES + "/"
+									, PATH_DIR_DATA = PATH_RESOURCES + Key.KEY_DATA + "/"
+									, PATH_DIR_XML = PATH_DIR_DATA+ "/" + Key.KEY_XML + "/"
+									
+									, PATH_DIR_BOOTSTRAP = Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_BOOTSTRAP + "/"
+									, PATH_DIR_BOOTSTRAP_CSS = PATH_DIR_BOOTSTRAP + Key.KEY_CSS + "/"  
+									, PATH_DIR_BOOTSTRAP_JS = PATH_DIR_BOOTSTRAP + Key.KEY_JS + "/"
+									, PATH_DIR_CSS = Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_CSS + "/"
+									, PATH_DIR_JS= Server.PACKAGE_NAME + PATH_RESOURCES + Key.KEY_JS + "/"
+									
+									
+									, PATH_DIR_ASSETS = "/" + Key.KEY_ASSETS + "/"
+									, PATH_DIR_IMAGES = Server.PACKAGE_NAME + PATH_DIR_ASSETS + Key.KEY_IMAGES + "/"
+									, PATH_DIR_IMAGES_BACKGROUND = PATH_DIR_IMAGES + Key.KEY_BACKGROUND + "/"
+									, PATH_DIR_IMAGES_CHARACTER = PATH_DIR_IMAGES + Key.KEY_CHARACTER + "/"
+									, PATH_DIR_IMAGES_EFFECT = PATH_DIR_IMAGES + Key.KEY_EFFECT + "/"
+											
+									// jsp folder
+									, PATH_VIEW_DIR_HOME = "/home/"
+									, PATH_VIEW_DIR_MANAGE= "/manage/"
+									
+									// path of jsp
+									, PATH_VIEW_FRAME = PATH_VIEW_DIR_HOME + File.VIEW_FRAME
+									, PATH_VIEW_HOME = PATH_VIEW_DIR_HOME + File.VIEW_HOME
+									
+									, PATH_VIEW_MANAGE_WEATHER = PATH_VIEW_DIR_MANAGE + File.VIEW_MANAGE_WEATHER
+									
+//									, PATH_VIEW_ATTRIBUTE = PATH_VIEW_DIR_HOME+ "/" + File.VIEW_ATTRIBUTE
+									, PATH_VIEW_STYLE = PATH_VIEW_DIR_HOME + File.VIEW_STYLE
+									, PATH_VIEW_SCRIPT = PATH_VIEW_DIR_HOME + File.VIEW_SCRIPT
+									
+									;
+	}
+	
+	public class File{
+									// file
+		public static final String FILE_NAME_XML_WEATHERDATA = "WeatherData.xml"
+									, FILE_NAME_XML_ADDRESSDATA = "AddressData.xml"
+									, FILE_NAME_JS_COMMONSCRIPT= "commonScript.js"
+				
+									// jsp
+									, VIEW_FRAME = "frame"
+									, VIEW_HOME= "home"
+									, VIEW_MANAGE_WEATHER= "manage_weather"
+//									, VIEW_ATTRIBUTE= "attribute"
+									, VIEW_STYLE = "style"
+									, VIEW_SCRIPT = "script"
+									;
+		
+	}
+}

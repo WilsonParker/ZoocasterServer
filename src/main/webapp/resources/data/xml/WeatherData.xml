@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weatherData>
+	<weathers>
+		<!-- Group 2xx: Thunderstorm -->
+		<weather id=" 200" message="thunderstorm with light rain" />
+		<weather id=" 201" message="thunderstorm with rain" />
+		<weather id=" 202" message="thunderstorm with heavy rain" />
+		<weather id=" 210" message="light thunderstorm" />
+		<weather id=" 211" message="thunderstorm" />
+		<weather id=" 212" message="heavy thunderstorm" />
+		<weather id=" 221" message="ragged thunderstorm" />
+		<weather id=" 230" message="thunderstorm with light drizzle" />
+		<weather id=" 231" message="thunderstorm with drizzle" />
+		<weather id=" 232" message="thunderstorm with heavy drizzle" />
+
+		<!-- Group 3xx: Drizzle -->
+		<weather id="300" message="light intensity drizzle" />
+		<weather id="301" message="drizzle" />
+		<weather id="302" message="heavy intensity drizzle" />
+		<weather id="310" message="light intensity drizzle rain" />
+		<weather id="311" message="drizzle rain" />
+		<weather id="312" message="heavy intensity drizzle rain" />
+		<weather id="313" message="shower rain and drizzle" />
+		<weather id="314" message="heavy shower rain and drizzle" />
+		<weather id="321" message="shower drizzle" />
+
+		<!-- Group 5xx: Rain -->
+		<weather id="500" message="light rain" />
+		<weather id="501" message="moderate rain" />
+		<weather id="502" message="heavy intensity rain" />
+		<weather id="503" message="very heavy rain" />
+		<weather id="504" message="extreme rain" />
+		<weather id="511" message="freezing rain" />
+		<weather id="520" message="light intensity shower rain" />
+		<weather id="521" message="shower rain" />
+		<weather id="522" message="heavy intensity shower rain" />
+		<weather id="531" message="ragged shower rain" />
+
+		<!-- Group 6xx: Snow -->
+		<weather id="600" message="light snow" />
+		<weather id="601" message="snow" />
+		<weather id="602" message="heavy snow" />
+		<weather id="611" message="sleet" />
+		<weather id="612" message="shower sleet" />
+		<weather id="615" message="light rain and snow" />
+		<weather id="616" message="rain and snow" />
+		<weather id="620" message="light shower snow" />
+		<weather id="621" message="shower snow" />
+		<weather id="622" message="heavy shower snow" />
+
+		<!-- Group 7xx: Atmosphere -->
+		<weather id="701" message="mist" />
+		<weather id="711" message="smoke" />
+		<weather id="721" message="haze" />
+		<weather id="731" message="sand, dust whirls" />
+		<weather id="741" message="fog" />
+		<weather id="751" message="sand" />
+		<weather id="761" message="dust" />
+		<weather id="762" message="volcanic ash" />
+		<weather id="771" message="squalls" />
+		<weather id="781" message="tornado" />
+
+		<!-- Group 800: Clear -->
+		<weather id="800" message="clear sky" />
+
+		<!-- Group 80x: Clouds -->
+		<weather id="801" message="few clouds" />
+		<weather id="802" message="scattered clouds" />
+		<weather id="803" message="broken clouds" />
+		<weather id="804" message="overcast clouds" />
+		<!-- Group 90x: Extreme -->
+
+		<weather id="900" message="tornado" />
+		<weather id="901" message="tropical storm" />
+		<weather id="902" message="hurricane" />
+		<weather id="903" message="cold" />
+		<weather id="904" message="hot" />
+		<weather id="905" message="windy" />
+		<weather id="906" message="hail" />
+		
+		<!-- Group 9xx: Additional -->
+		<weather id="951" message="calm" />
+		<weather id="952" message="light breeze" />
+		<weather id="953" message="gentle breeze" />
+		<weather id="954" message="moderate breeze" />
+		<weather id="955" message="fresh breeze" />
+		<weather id="956" message="strong breeze" />
+		<weather id="957" message="high wind, near gale" />
+		<weather id="958" message="gale" />
+		<weather id="959" message="severe gale" />
+		<weather id="960" message="storm" />
+		<weather id="961" message="violent storm" />
+		<weather id="962" message="hurricane" />
+	</weathers>
+</weatherData>

@@ -1,0 +1,186 @@
+<%@ page import="com.graction.lumi.util.format.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.util.stream.Stream"%>
+<%@ page import="com.graction.lumi.data.*"%>
+<%@ page import="com.graction.lumi.util.StringUtil"%>
+<%@ page import="com.graction.lumi.data.DataStorage.*"%>
+<%@ page import="com.graction.lumi.model.response.*"%>
+<%@ page import="com.graction.lumi.model.vo.FineDustVO"%>
+<%
+	FineDustVO vo = (FineDustVO) request.getAttribute(DataStorage.Attribute.ATTR_FINE_DUST_VO);
+	String iTag = "<i class=\"fa fa-fw fa-times img-delete\" style=\"float:right\" onclick=\"deleteOnITag(this)\"></i>";
+%>
+<style>
+td img {
+	width: 45%;
+	min-width: 350px;
+}
+</style>
+
+<h1>Fine Dust Information</h1>
+<hr>
+
+<div class="card mb-3">
+	<div class="card-header">
+		<i class="fa fa-table"></i> Fine Dust Information
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<form id="frm" method="post" enctype="multipart/form-data">
+				<table class="table table-bordered dataTable " width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_GRADE%></td>
+					<%-- <td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_GRADE%>" value="<%=vo.getFineDust_grade()%>"/></td> --%>
+					<td><p><%=vo.getFineDust_grade()%></p></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MIN%></td>
+					<%-- <td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_MIN%>" value="<%=vo.getFineDust_min()%>"/></td> --%>
+					<td><p><%=vo.getFineDust_min()%></p></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_MAX%></td>
+					<%-- <td><input type="text" name="<%=DataStorage.Param.PARAM_FINE_DUST_MAX%>" value="<%=vo.getFineDust_max()%>"/></td> --%>
+					<td><p><%=vo.getFineDust_max()%></p></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_BACKGROUND_PATH%></td>
+					<td><%=vo.getBackground_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_BACKGROUND_NAME%></td>
+					<td><%=vo.getBackground_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_BACKGROUND%>"/>
+					</td>
+					<td>
+						<%
+							if(!StringUtil.nullCheck(vo.getFineDust_background_ref_file_index(), false)){
+								out.print(iTag);
+							}
+						%>
+						<img class="img-thumbnail" name="<%=DataStorage.Param.PARAM_BACKGROUND%>" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getBackground_path() + vo.getBackground_name()%>" />	
+					</td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_CHARACTER_PATH%></td>
+					<td><%=vo.getCharacter_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_CHARACTER_NAME%></td>
+					<td><%=vo.getCharacter_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_CHARACTER%>">
+					</td>
+					<td>
+						<%
+							if(!StringUtil.nullCheck(vo.getFineDust_character_ref_file_index(), false)){
+								out.print(iTag);
+							}
+						%>
+						<img class="img-thumbnail" name="<%=DataStorage.Param.PARAM_CHARACTER%>" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getCharacter_path() + vo.getCharacter_name()%>" />	
+					</td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_EFFECT_PATH%></td>
+					<td><%=vo.getEffect_path()%></td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_EFFECT_NAME%></td>
+					<td><%=vo.getEffect_name()%></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-default" name="<%=DataStorage.Param.PARAM_EFFECT%>" />
+					</td>
+					<td>
+						<%
+							if(!StringUtil.nullCheck(vo.getFineDust_effect_ref_file_index(), false)){
+								out.print(iTag);
+							}
+						%>
+						<img class="img-thumbnail" name="<%=DataStorage.Param.PARAM_EFFECT%>" src="<%=DataStorage.Server.PATH_UPLOAD_DIR + vo.getEffect_path() + vo.getEffect_name()%>" />
+					</td>
+				</tr>
+				<tr>
+					<td><%=DataStorage.Database.Column.COLUMN_FINE_DUST_ACTIVATION%></td>
+					<td>
+						<input type="button" class="btn btn-outline btn-info" onclick="setActivation('<%=DataStorage.Type.TYPE_ACTIVATION%>')" value="<%=DataStorage.Type.TYPE_ACTIVATION%>" />
+						<input type="button" class="btn btn-outline btn-warning" onclick="setActivation('<%=DataStorage.Type.TYPE_TERMINATED%>')" value="<%=DataStorage.Type.TYPE_TERMINATED %>" />
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<button type="button" class="btn btn-warning btn-circle btn-lg" onclick="javascript:window.history.back();"><i class="fa fa-times"></i> </button>
+		<button type="button" class="btn btn-info btn-circle btn-lg" onclick="submit()"><i class="fa fa-check"></i> </button>
+	</div>
+</div>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>jquery-3.2.1.min.js"></script>
+<script>
+	function submit(){
+		loadingActivation();
+		var frmData = new FormData(document.getElementById('frm'));
+		frmData.set("<%=Param.PARAM_BACKGROUND_PATH%>", "<%=Path.PATH_DIR_IMAGES_BACKGROUND%>");
+    	frmData.set("<%=Param.PARAM_CHARACTER_PATH%>", "<%=Path.PATH_DIR_IMAGES_CHARACTER%>");
+    	frmData.set("<%=Param.PARAM_EFFECT_PATH%>", "<%=Path.PATH_DIR_IMAGES_EFFECT%>");
+    	frmData.set("<%=DataStorage.Param.PARAM_FINE_DUST_INDEX%>","<%=vo.getFineDust_index()%>");
+    	frmData.set("<%=Param.PARAM_BACKGROUND_INDEX%>", imgMap.get("<%=Database.Column.COLUMN_BACKGROUND_INDEX%>"));
+    	frmData.set("<%=Param.PARAM_CHARACTER_INDEX%>", imgMap.get("<%=Database.Column.COLUMN_CHARACTER_INDEX%>"));
+    	frmData.set("<%=Param.PARAM_EFFECT_INDEX%>", imgMap.get("<%=Database.Column.COLUMN_EFFECT_INDEX%>"));
+    	frmData.set("<%=Param.PARAM_FINE_DUST_ACTIVATION%>", imgMap.get("<%=Database.Column.COLUMN_FINE_DUST_ACTIVATION%>"));
+		log(frmData);
+		$.ajax({
+			url : "<%=request.getContextPath()+Mapping.MAPPING_FINE_DUST_MODIFY%>",
+			type : "POST",
+			processData: false,
+            contentType: false,
+			data : frmData,
+			success : function(result){
+				showAlert("<%=Code.CODE_SUCCESS%>");
+			},
+			error : function(xhr, status, error){
+				showAlert("<%=Code.CODE_FAIL%>");
+			}
+		});
+	}
+	
+	function setActivation(value){
+		imgMap.set("<%=Database.Column.COLUMN_FINE_DUST_ACTIVATION%>", value);		
+	}
+	
+	function showAlert(result){
+		/* loadingTermination(); */
+		<%-- switch(result){
+		case "<%=Code.CODE_SUCCESS%>" :
+			alert("<%=Message.FINE_DUST_DETAIL_SUCCESS_MESSAGE%>");
+			location.href="<%=request.getContextPath()+Mapping.MAPPING_MANAGE_FINE_DUST%>";
+			break;
+		case "<%=Code.CODE_FAIL%>" :
+			alert("<%=Message.FINE_DUST_DETAIL_FAIL_MESSAGE%>");
+			break;
+		} --%>
+	}
+	
+$(function(){
+imgMap.set("<%=Database.Column.COLUMN_BACKGROUND_INDEX%>",  <%=vo.getFineDust_background_ref_file_index()%>);
+imgMap.set("<%=Database.Column.COLUMN_CHARACTER_INDEX%>", <%=vo.getFineDust_character_ref_file_index()%>);
+imgMap.set("<%=Database.Column.COLUMN_EFFECT_INDEX%>", <%=vo.getFineDust_effect_ref_file_index()%>);
+imgMap.set("<%=Database.Column.COLUMN_FINE_DUST_ACTIVATION%>", "<%=vo.getFineDust_activation()%>");
+$("input[type='file']").on('change', function(){
+	var obj = this;
+	addXButton(this, function(){
+		deleteAll(obj);
+	});
+});
+});
+</script>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>DateScript.js"></script>
+<script src="<%=DataStorage.Path.PATH_DIR_JS%>tree.js"></script>

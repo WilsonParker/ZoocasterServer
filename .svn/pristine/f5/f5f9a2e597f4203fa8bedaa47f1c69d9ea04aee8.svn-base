@@ -1,0 +1,20 @@
+<%@page import="com.graction.lumi.data.DataStorage"%>
+
+<%-- <link rel="stylesheet" href="<%=DataStorage.Server.SERVER_URL%>/resources/bootstrap/css/bootstrap-grid.min.css" />
+<link rel="stylesheet" href="<%=DataStorage.Server.SERVER_URL%>/resources/bootstrap/css/bootstrap-reboot.min.css" />
+<link rel="stylesheet" href="<%=DataStorage.Server.SERVER_URL%>/resources/bootstrap/css/bootstrap.min.css" />
+--%>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+	integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+	crossorigin="anonymous">
+	
+<link rel="stylesheet" href="<%=DataStorage.Path.PATH_DIR_BOOTSTRAP_CSS%>font-awesome.min.css" />
+<link rel="stylesheet" href="<%=DataStorage.Path.PATH_DIR_BOOTSTRAP_CSS%>sb-admin.min.css" />
+	
+<style>
+	table tbody * {
+		cursor: pointer;
+	}
+</style>

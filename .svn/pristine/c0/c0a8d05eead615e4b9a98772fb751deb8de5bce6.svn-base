@@ -1,0 +1,20 @@
+package com.graction.lumi.model;
+
+public interface ImageFrame {
+	
+	public String getBackground_img_path();
+	public String getBackground_img_name();
+	default String getBackground_img_url() {
+		return getBackground_img_path()+getBackground_img_name();
+	}
+	public String getCharacter_img_path();
+	public String getCharacter_img_name();
+	default String getCharacter_img_url() {
+		return getCharacter_img_path()+getCharacter_img_name();
+	}
+	public String getEffect_img_path();
+	public String getEffect_img_name();
+	default String getEffect_img_url() {
+		return getEffect_img_path()+getEffect_img_name();
+	}
+}

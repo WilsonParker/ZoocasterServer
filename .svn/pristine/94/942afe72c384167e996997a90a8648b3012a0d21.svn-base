@@ -1,0 +1,65 @@
+package com.graction.lumi.util.gps;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import com.graction.lumi.util.log.HLogger;
+import com.graction.lumi.util.log.HLogger.LogType;
+
+/**
+ * Created by Hare on 2017-07-20. Updated by Hare on 2017-09-27.
+ */
+public class NaverLocationManager {
+	private static NaverLocationManager instance = new NaverLocationManager();
+	private static final String ENCODING= "utf-8"
+						, API_URL = "https://openapi.naver.com/v1/map/geocode"
+//						, API_URL = "https://openapi.naver.com/v1/map/geocode.xml"
+						, CLIENT_ID = "3L76G4kgspqO7kBOHor9"
+						, CLIENT_SECRET = "TRn9JKjucS"
+						;
+	private HLogger logger;
+
+	public static NaverLocationManager getInstance() {
+		return instance;
+	}
+
+	public NaverLocationManager() {
+		logger = new HLogger(getClass());
+	}
+
+	// Use lat and lon to get address
+	public String getAddress(final String lat, final String lon) {
+		try {
+			String apiURL = API_URL+"?"
+					+ "query=" + lat + "," + lon
+					+ "&encoding=" + ENCODING
+					; // json
+			URL url = new URL(apiURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("X-Naver-Client-Id", CLIENT_ID);
+			con.setRequestProperty("X-Naver-Client-Secret", CLIENT_SECRET);
+			int responseCode = con.getResponseCode();
+			BufferedReader br;
+			if (responseCode == 200) { // 정상 호출
+				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			} else { // 에러 발생
+				br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+			}
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = br.readLine()) != null) {
+				response.append(inputLine);
+			}
+			br.close();
+			logger.log(LogType.INFO, "getAddress(final String lat, final String lon)","lat : "+lat+" / "+lon);
+			logger.log(LogType.INFO, "getAddress(final String lat, final String lon)",apiURL);
+			logger.log(LogType.INFO, "getAddress(final String lat, final String lon)",response.toString());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return "";
+	}
+}

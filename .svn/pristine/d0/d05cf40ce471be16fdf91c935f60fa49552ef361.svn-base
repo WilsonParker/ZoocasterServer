@@ -1,0 +1,5 @@
+package com.graction.lumi.util.format;
+
+public class TemperatureManager {
+	private static final TemperatureManager instance = new TemperatureManager();
+}

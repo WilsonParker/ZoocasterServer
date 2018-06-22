@@ -1,0 +1,33 @@
+package com.graction.lumi.model.request;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class WeatherRequestModel {
+	private static final String KEY_APPID = "appid"
+								, KEY_LAT = "lat"
+								, KEY_LON = "lon"
+								, appid = "5a165ea40110d89c6a33e762fb7501c6"
+								;
+	private Map<String ,String> map;
+
+	public WeatherRequestModel(String lat, String lon) {
+		map = new HashMap<String, String>();
+		map.put(KEY_APPID, appid);
+		map.put(KEY_LAT, lat);
+		map.put(KEY_LON, lon);
+	}
+
+	public void setLat(String lat) {
+		map.put(KEY_LAT, lat);
+	}
+	
+	public void setLon(String lon) {
+		map.put(KEY_LON, lon);
+	}
+	
+	public Map<String, String> getMap() {
+		return map;
+	}
+
+}

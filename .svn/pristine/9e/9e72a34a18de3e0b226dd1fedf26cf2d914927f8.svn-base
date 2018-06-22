@@ -1,0 +1,19 @@
+package com.graction.lumi.net;
+
+import java.util.Map;
+
+import com.graction.lumi.model.response.DailyForecastModel;
+import com.graction.lumi.model.response.WeatherModel;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.QueryMap;
+
+public interface NetFactoryIm {
+
+	@GET("/data/2.5/forecast/daily")
+	Call<DailyForecastModel> selectForecastDaily(@QueryMap Map<String, String> map);
+	
+	@GET("/data/2.5/weather")
+	Call<WeatherModel> selectWeather(@QueryMap Map<String, String> map);
+}

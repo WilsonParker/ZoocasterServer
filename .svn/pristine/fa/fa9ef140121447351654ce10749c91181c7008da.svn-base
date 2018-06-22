@@ -1,0 +1,32 @@
+package com.graction.lumi.data;
+
+import java.util.List;
+
+import com.graction.lumi.model.response.WeatherModel;
+import com.graction.lumi.model.vo.RegionReservationVO;
+
+public class WeatherDataProvider {
+	private static final WeatherDataProvider instance = new WeatherDataProvider();
+
+	public static WeatherDataProvider getInstance() {
+		return instance;
+	}
+
+	// Compare reservation and dust priority
+	public WeatherModel setWeatherdata(WeatherModel weatherModel) {
+		DataTableManager dataTableManager = DataTableManager.getInstance();
+		List<RegionReservationVO> tableList = dataTableManager.getDBRegionReservationList();
+		for (RegionReservationVO table : tableList) {
+			// AddressManager.getInstance().extractAddress(table.getRegionReservation_region());
+			System.out.println("address : "+weatherModel.getAddress());
+			
+			if (weatherModel.getAddress().contains(table.getRegionReservation_region())) {
+				weatherModel.setBackground_img_url(table.getBackground_path() + table.getBackground_name());
+				weatherModel.setCharacter_img_url(table.getCharacter_path() + table.getCharacter_name());
+				weatherModel.setEffect_img_url(table.getEffect_path() + table.getEffect_name());
+			}
+//			StringUtil.getDefaultString(s, def);
+		}
+		return weatherModel;
+	}
+}
